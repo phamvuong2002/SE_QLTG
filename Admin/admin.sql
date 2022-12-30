@@ -1,0 +1,208 @@
+﻿USE QLTG
+GO
+
+----------------------------1----------------------------
+DROP PROC IF EXISTS USP_getAdminOverview
+GO
+
+CREATE 
+--ALTER 
+PROC USP_getAdminOverview
+AS
+	SELECT *, 'AUTHOR' AS TYPE FROM AUTHOR
+	SELECT *, 'EDITOR' AS TYPE FROM EDITOR
+GO
+
+----------------------------2----------------------------
+DROP PROC IF EXISTS USP_getAllAccounts
+GO
+
+CREATE 
+--ALTER 
+PROC USP_getAllAccounts
+AS
+	SELECT *, 'AUTHOR' AS 'TYPE' FROM AUTHOR
+	SELECT *, 'EDITOR' AS 'TYPE' FROM EDITOR
+GO
+
+--EXEC USP_getAllAccounts
+
+----------------------------3----------------------------
+DROP PROC IF EXISTS USP_getAllAuthors 
+GO
+
+CREATE 
+--ALTER 
+PROC USP_getAllAuthors
+AS
+	SELECT AU.AUTHORID, AU.AUTHORNAME, AU.USERNAME, (SELECT COUNT(*) FROM STORY ST WHERE ST.AUTHORID = AU.AUTHORID) AS 'SL'
+	FROM AUTHOR AU
+--RETURN 1
+GO
+
+--EXEC USP_getAllAuthors
+
+----------------------------4----------------------------
+DROP PROC IF EXISTS USP_getAllEditors
+GO
+
+CREATE 
+--ALTER 
+PROC USP_getAllEditors
+AS
+	SELECT E.EDITORID, E.EDITORNAME, (SELECT COUNT(*) FROM AUTHOR AU WHERE EDITORID = E.EDITORID) AS 'SLTG', (SELECT COUNT(*) FROM STORY WHERE EDITORID = E.EDITORID) AS 'SLT'
+	FROM EDITOR E
+	--GROUP BY E.EDITORID, E.EDITORNAME
+GO
+
+--EXEC USP_getAllEditors
+--SELECT COUNT(*) FROM STORY WHERE EDITORID = 'ED785700      '
+--SELECT COUNT(*) FROM AUTHOR WHERE EDITORID = 'ED785700      '
+
+----------------------------5----------------------------
+DROP PROC IF EXISTS USP_createAdmin
+GO
+
+CREATE 
+--ALTER 
+PROC USP_createAdmin
+	@adminid CHAR(10),
+	@username CHAR(20),
+	@password CHAR(15)
+AS
+BEGIN TRAN
+	IF EXISTS (SELECT ADMINID FROM ADMIN WHERE TRIM(ADMINID) = TRIM(@adminid))
+		BEGIN
+			SELECT 'ID IS EXISTED' AS 'ERROR'
+			ROLLBACK TRAN
+			RETURN 0
+		END
+
+	INSERT ADMIN (ADMINID, PASSWORD, USERNAME) 
+	VALUES (@adminid, @password, @username)
+	SELECT 'ADDING ADMIN SUCCESSFULLY' AS '1'
+COMMIT TRAN
+RETURN 1
+GO
+
+----------------------------6----------------------------
+DROP PROC IF EXISTS USP_createAuthor
+GO
+
+CREATE 
+--ALTER 
+PROC USP_createAuthor
+	@authorid CHAR(10),
+	@username CHAR(20),
+	@password CHAR(15)
+AS
+BEGIN TRAN
+	IF EXISTS (SELECT AUTHORID FROM AUTHOR WHERE TRIM(AUTHORID) = TRIM(@authorid))
+		BEGIN
+			SELECT 'ID IS EXISTED' AS 'ERROR'
+			ROLLBACK TRAN
+			RETURN 0
+		END
+
+	INSERT AUTHOR (AUTHORID, PASSWORD, USERNAME) 
+	VALUES (@authorid, @password, @username)
+	SELECT 'ADDING AUTHOR SUCCESSFULLY' AS '1'
+COMMIT TRAN
+RETURN 1	
+GO
+
+----------------------------7----------------------------
+DROP PROC IF EXISTS USP_createEditor
+GO
+
+CREATE 
+--ALTER 
+PROC USP_createEditor
+	@editorid CHAR(10),
+	@username CHAR(20),
+	@password CHAR(15)
+AS
+BEGIN TRAN
+	IF EXISTS (SELECT EDITORID FROM EDITOR WHERE TRIM(EDITORID) = TRIM(@editorid))
+		BEGIN
+			SELECT 'ID IS EXISTED' AS 'ERROR'
+			ROLLBACK TRAN
+			RETURN 0
+		END
+
+	INSERT EDITOR (EDITORID, PASSWORD, USERNAME) 
+	VALUES (@editorid, @password, @username)
+	SELECT 'ADDING EDITOR SUCCESSFULLY' AS '1'
+COMMIT TRAN
+RETURN 1	
+GO
+
+----------------------------8----------------------------
+DROP PROC IF EXISTS USP_deleteAdmin
+GO
+
+CREATE 
+--ALTER 
+PROC USP_deleteAdmin
+	@adminid CHAR(10)
+AS
+BEGIN TRAN
+	IF NOT EXISTS (SELECT ADMINID FROM ADMIN WHERE TRIM(ADMINID) = TRIM(@adminid))
+		BEGIN
+			SELECT 'ID IS NOT EXIST' AS 'ERROR'
+			ROLLBACK TRAN
+			RETURN 0
+		END
+
+	DELETE FROM ADMIN WHERE TRIM(ADMINID) = TRIM(@adminid)
+	SELECT 'DELETE ADMIN ' + @adminid + ' SUCCESSFULLY' AS '1'
+COMMIT TRAN
+RETURN 1	
+GO
+
+----------------------------9----------------------------
+DROP PROC IF EXISTS USP_deleteAuthor
+GO
+
+CREATE 
+--ALTER 
+PROC USP_deleteAuthor
+	@authorid CHAR(10)
+AS
+BEGIN TRAN
+	IF NOT EXISTS (SELECT AUTHORID FROM AUTHOR WHERE TRIM(AUTHORID) = TRIM(@authorid))
+		BEGIN
+			SELECT 'ID IS NOT EXIST' AS 'ERROR'
+			ROLLBACK TRAN
+			RETURN 0
+		END
+
+	DELETE FROM AUTHOR WHERE TRIM(AUTHORID) = TRIM(@authorid)
+	SELECT 'DELETE AUTHOR ' + @authorid + ' SUCCESSFULLY' AS '1'
+COMMIT TRAN
+RETURN 1	
+GO
+
+----------------------------10----------------------------
+DROP PROC IF EXISTS USP_deleteEditor
+GO
+
+CREATE 
+--ALTER 
+PROC USP_deleteEditor
+	@editorid CHAR(10)
+AS
+BEGIN TRAN
+	IF NOT EXISTS (SELECT EDITORID FROM EDITOR WHERE TRIM(EDITORID) = TRIM(@editorid))
+		BEGIN
+			SELECT 'ID IS NOT EXIST' AS 'ERROR'
+			ROLLBACK TRAN
+			RETURN 0
+		END
+
+	DELETE FROM EDITOR WHERE TRIM(EDITORID) = TRIM(@editorid)
+	SELECT 'DELETE EDITOR ' + @editorid + ' SUCCESSFULLY' AS '1'
+COMMIT TRAN
+RETURN 1	
+GO
+
