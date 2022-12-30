@@ -12,7 +12,7 @@ begin
 		return 0
 	end
 	declare @story int = 0, @chap int = 0
-	select @story = COUNT(STORYID), @chap = sum(NUMOFCHAPS) from STORY where AUTHORID = @authorid	
+	select @story = ISNULL(COUNT(STORYID),0), @chap = ISNULL(sum(NUMOFCHAPS),0) from STORY where AUTHORID = @authorid	
 	declare @earn float = 0, @unpair float = 0
 	select @earn = @earn + sum(GIA), @unpair = @unpair + sum(UNPAIR)  from CHAPTER where AUTHORID = @authorid 
 	select @earn = @earn + sum(GIA), @unpair = @unpair + sum(UNPAIR)  from DRAFT where AUTHORID = @authorid 
@@ -20,49 +20,7 @@ begin
 	select @story numstory, @chap numchap, @earn earn, (@earn - @unpair) as 'receive'
 end
 exec countStory 'AU7947660'
------------------------COUNT CHAPTER------------------
-create 
---alter 
-proc countChapter
-	@authorid char(10)
-as
-begin
-	select COUNT(CHAPTERID) NUM from CHAPTER where AUTHORID = @authorid	
-end
-exec countChapter 'AU7947660 '
-------------------CAL EARN-----------------------
-create 
---alter 
-proc calEarn
-	@authorid char(10)
-as
-begin
-	declare @earn float = 0, @unpair float = 0
-	select @earn = @earn + sum(GIA), @unpair = @unpair + sum(UNPAIR)  from CHAPTER where AUTHORID = @authorid
-	select @earn = @earn + sum(GIA), @unpair = @unpair + sum(UNPAIR)  from DRAFT where AUTHORID = @authorid
-	select @earn = @earn + sum(GIA), @unpair = @unpair + sum(UNPAIR)  from OUTLINE where AUTHORID = @authorid
-	select @earn EARN
-end
-exec calEarn 'AU7947660 '
-------------------CAL RECEIVE-----------------------
-create 
---alter 
-proc calReceive
-	@authorid char(10)
-as
-begin
-	declare @receive float = 0
-	select @receive = @receive + sum(GIA - UNPAIR)  from CHAPTER where AUTHORID = @authorid
-	select @receive = @receive + sum(GIA - UNPAIR)  from DRAFT where AUTHORID = @authorid
-	select @receive = @receive + sum(GIA - UNPAIR)  from OUTLINE where AUTHORID = @authorid
-	select @receive RECEIVE
 
-	select *from CHAPTER where AUTHORID = 'AU7947660'
-	select *from OUTLINE where AUTHORID = 'AU7947660'
-	select *from DRAFT where AUTHORID = 'AU7947660'
-end
-exec calReceive 'AU7947660 '
-select *from SALARYSTATUS
 
 ---------------update draft table-----
 DECLARE @Counter INT 
@@ -164,3 +122,45 @@ BEGIN
 		where STORYID = @storyid
 END
 
+-----------------------------storydatalist-------------------
+create 
+--alter
+proc storydatalist
+	@authorid char(10)
+as
+begin
+	if not exists (select STORYID from STORY where AUTHORID = @authorid)
+	begin
+		SELECT 'AUTHOR HAS NO STORY ' ERROR
+		return 0
+	end
+
+	select STORYID storyid, STORYNAME name, AVATAR avt,
+	STATE process, NUMOFCHAPS approve from STORY
+	where AUTHORID = @authorid
+	
+end
+
+select *from DRAFT where STORYID = 'ST001775  '
+select *from STORY where AUTHORID = 'AU7922632 '
+exec storydatalist 'AU7922632  '
+
+
+---------------------------Cal Pair Unpair Story-------------------------
+create 
+--alter
+proc calPairUnpairStory
+	@storyid char(10)
+as
+begin
+	declare @gia float = 0, @unpair float = 0
+	select @gia = @gia + ISNULL(SUM(GIA), 0 ), @unpair = @unpair + ISNULL(SUM(UNPAIR), 0 ) from CHAPTER where STORYID = @storyid
+	select @gia = @gia + ISNULL(SUM(GIA), 0 ), @unpair = @unpair + ISNULL(SUM(UNPAIR), 0 ) from OUTLINE where STORYID = @storyid
+	select @gia = @gia + ISNULL(SUM(GIA), 0 ), @unpair = @unpair + ISNULL(SUM(UNPAIR), 0 ) from DRAFT where STORYID = @storyid
+	select @unpair unpaid, (@gia - @unpair) paid
+end
+
+exec calPairUnpairStory 'ST999614  '
+select *from DRAFT WHERE STORYID = 'ST999614  '
+select *from OUTLINE WHERE STORYID = 'ST999614  '
+select *from CHAPTER WHERE STORYID = 'ST999614  '
