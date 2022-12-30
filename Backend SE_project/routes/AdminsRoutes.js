@@ -17,4 +17,4 @@ router.delete('/deleteeditor/:id', AdminControll.delete_Editor);
 
 module.exports = {
     routes: router
-};
+}
