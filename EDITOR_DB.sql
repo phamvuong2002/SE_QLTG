@@ -19,3 +19,31 @@ begin
 end
 GO
 exec editorcountStory 'ED841430  '
+
+
+
+create 
+--alter
+proc selectAuthorList
+	@editorid char(10)
+as
+begin
+	if not exists (select EDITORID from EDITOR where EDITORID = @editorid)
+	begin
+		SELECT 'EDITOR NOT EXISTS' AS ERROR
+		return 0
+	end
+	
+	select distinct AUTHORNAME, count(STORYID) as NUMOFSTORYs, sum(NUMOFCHAPS)
+	from STORY S join AUTHOR A ON S.AUTHORID = A.AUTHORID
+	where A.EDITORID = @editorid
+	group by AUTHORNAME
+
+end
+go
+exec selectAuthorList 'ED841430  '
+
+
+
+
+

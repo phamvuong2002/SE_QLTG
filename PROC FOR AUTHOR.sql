@@ -19,6 +19,7 @@ begin
 	select @earn = @earn + sum(GIA), @unpair = @unpair + sum(UNPAIR)  from OUTLINE where AUTHORID = @authorid 
 	select @story numstory, @chap numchap, @earn earn, (@earn - @unpair) as 'receive'
 end
+go
 exec countStory 'AU7947660'
 
 

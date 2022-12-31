@@ -1,8 +1,10 @@
 'use strict';
 
 const express = require('express');
-const AuthorsControll = require('../controllers/AuthorsController');
 const router = express.Router();
+const AuthorsControll = require('../controllers/AuthorsController');
+
+
 
 //-----------------------AUTHORS--------------------------------------------
 // router.get('/getauthors', AuthorsControll.get_all_authors);
@@ -15,6 +17,7 @@ router.get('/getallchapterofstory/:id', AuthorsControll.getAllChaptersofStory);
 // router.put('/updateauthor/:id', AuthorsControll.update_Author);
 // router.delete('/deleteauthor/:id', AuthorsControll.delete_Author);
 
-module.exports = {
+
+module.exports ={
     routes: router
 }
