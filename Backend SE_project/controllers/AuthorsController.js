@@ -22,6 +22,24 @@ const storyDatalist = async (req, res, next) => {
         res.status(400).send(error.message);
     }
 }
+const calPairUnpairStory = async (req, res, next) => {
+    try {
+        const storyid = req.params.id;
+        const value = await AuthorsData.calPairUnpairStory(storyid);
+        res.send(value);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+const getAllChaptersofStory = async (req, res, next) => {
+    try {
+        const storyid = req.params.id;
+        const chapters = await AuthorsData.getAllChaptersofStory(storyid);
+        res.send(chapters);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
 module.exports = {
-    countStory, storyDatalist
+    countStory, storyDatalist, calPairUnpairStory, getAllChaptersofStory
 }
