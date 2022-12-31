@@ -1,1 +1,1 @@
-EXEC [dbo].[USP_getAllEditors]
+EXEC [dbo].[USP_getAllEditors] @adminid

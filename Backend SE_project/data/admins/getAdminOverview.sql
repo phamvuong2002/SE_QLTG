@@ -1,1 +1,1 @@
-EXEC [dbo].[USP_getAdminOverview]
+EXEC [dbo].[USP_getAdminOverview] @adminid

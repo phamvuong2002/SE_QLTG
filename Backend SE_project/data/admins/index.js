@@ -3,44 +3,52 @@ const utils = require('../utils');
 const config = require('../../config');
 const sql = require('mssql');
 
-const getAdminOverview = async () => {
+const getAdminOverview = async (adminid) => {
     try {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await utils.loadSqlQueries('admins');
-        const overview = await pool.request().query(sqlQueries.getAdminOverview);
+        const overview = await pool.request()
+                            .input('adminid', sql.Char(10), adminid)
+                            .query(sqlQueries.getAdminOverview);
         return overview.recordset;
     } catch (error) {
         console.log(error.message);
     }
 }
 
-const getAllAccounts = async () => {
+const getAllAccounts = async (adminid) => {
     try {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await utils.loadSqlQueries('admins');
-        const accountList = await pool.request().query(sqlQueries.getAccounts);
+        const accountList = await pool.request()
+                            .input('adminid', sql.Char(10), adminid)
+                            .query(sqlQueries.getAccounts);
         return accountList.recordset;
     } catch (error) {
         console.log(error.message);
     }
 }
 
-const getAllAuthors = async () => {
+const getAllAuthors = async (adminid) => {
     try {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await utils.loadSqlQueries('admins');
-        const authorList = await pool.request().query(sqlQueries.getAuthors);
+        const authorList = await pool.request()
+                            .input('adminid', sql.Char(10), adminid)
+                            .query(sqlQueries.getAuthors);
         return authorList.recordset;
     } catch (error) {
         console.log(error.message);
     }
 }
 
-const getAllEditors = async () => {
+const getAllEditors = async (adminid) => {
     try {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await utils.loadSqlQueries('admins');
-        const editorList = await pool.request().query(sqlQueries.getEditors);
+        const editorList = await pool.request()
+                            .input('adminid', sql.Char(10), adminid)
+                            .query(sqlQueries.getEditors);
         return editorList.recordset;
     } catch (error) {
         console.log(error.message);
@@ -68,6 +76,7 @@ const createAuthor = async (data) => {
         const sqlQueries = await utils.loadSqlQueries('admins');
         const insert = await pool.request()
                             .input('authorid', sql.Char(10), data.authorid)
+                            .input('adminid', sql.Char(10), data.adminid)
                             .input('username', sql.Char(20), data.username)
                             .input('password', sql.Char(15), data.password)
                             .query(sqlQueries.createadmin);
@@ -83,6 +92,7 @@ const createEditor = async (data) => {
         const sqlQueries = await utils.loadSqlQueries('admins');
         const insert = await pool.request()
                             .input('editorid', sql.Char(10), data.editorid)
+                            .input('adminid', sql.Char(10), data.adminid)
                             .input('username', sql.Char(20), data.username)
                             .input('password', sql.Char(15), data.password)
                             .query(sqlQueries.createadmin);

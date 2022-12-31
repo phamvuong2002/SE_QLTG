@@ -1,1 +1,1 @@
-EXEC [dbo].[USP_getAllAccounts]
+EXEC [dbo].[USP_getAllAccounts] @adminid

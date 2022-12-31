@@ -4,8 +4,8 @@ const AdminsData = require('../data/admins');
 
 const admin_overview = async (req, res, next) => {
     try {
-
-        const overview = await AdminsData.getAdminOverview();
+        const adminid = req.params.id;
+        const overview = await AdminsData.getAdminOverview(adminid);
         res.send(overview);        
     } catch (error) {
         res.status(400).send(error.message);
@@ -14,8 +14,8 @@ const admin_overview = async (req, res, next) => {
 
 const get_all_accounts = async (req, res, next) => {
     try {
-
-        const accountslist = await AdminsData.getAllAccounts();
+        const adminid = req.params.id;
+        const accountslist = await AdminsData.getAllAccounts(adminid);
         res.send(accountslist);        
     } catch (error) {
         res.status(400).send(error.message);
@@ -24,8 +24,8 @@ const get_all_accounts = async (req, res, next) => {
 
 const get_all_authors = async (req, res, next) => {
     try {
-
-        const authorslist = await AdminsData.getAllAuthors();
+        const adminid = req.params.id;
+        const authorslist = await AdminsData.getAllAuthors(adminid);
         res.send(authorslist);        
     } catch (error) {
         res.status(400).send(error.message);
@@ -34,8 +34,8 @@ const get_all_authors = async (req, res, next) => {
 
 const get_all_editors = async (req, res, next) => {
     try {
-
-        const editorslist = await AdminsData.getAllEditors();
+        const adminid = req.params.id;
+        const editorslist = await AdminsData.getAllEditors(adminid);
         res.send(editorslist);        
     } catch (error) {
         res.status(400).send(error.message);
