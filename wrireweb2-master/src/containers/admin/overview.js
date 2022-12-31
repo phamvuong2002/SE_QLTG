@@ -1,73 +1,128 @@
 import React from 'react'
+import Create_Account from './account/createAcc'
 
 
 const Overview = () => {
     return (
-    <div className='flex-col w-fit h-fit bg-[#F7F8FC] ml-[20px]'>
-    
-    {/* Bảng trạng thái */}
-    <div className='flex  w-[1122px] h-[134px] rounded-lg '>
-
-        <button className='flex w-[258px] h-[134px] mr-[25px] ml-[10px]  border-[#c4c7ea]'>
-            <div className='bg-[#ffffff] rounded-[8px] px-[14px] py-[2px]  border-[2px]'>
-                <button className=' w-[258px] h-[134px]' >
-                    <div className='flex-col'>
-                        <div className='text-[#9FA2B4] text-[19px] font-semibold mt-[10px]'> Authors </div>
-                        <div className='text-[#252733] text-[60px] font-semibold'> 60 </div>
+        <div className='flex-col w-fit h-fit bg-[#F7F8FC] ml-[70px]'>     
+            <div className="grid grid-cols-4 gap-3 pb-5">
+                <div className="group bg-[#ffffff] w-[258px] h-[134px] rounded-lg shadow-md hover:bg-[#A7C7E7]">
+                    <p className='group-hover:text-white text-center pt-6 text-[#9FA2B4]'>
+                        Authors
+                    </p>
+                    <p className='group-hover:text-white text-center font-bold text-5xl pt-2'>
+                        12
+                    </p>
+                </div>
+                <div className="group bg-[#ffffff] w-[258px] h-[134px] rounded-lg shadow-md hover:bg-[#A7C7E7]">
+                    <p className='group-hover:text-white text-center pt-6 text-[#9FA2B4]'>
+                        Editor
+                    </p>
+                    <p className='group-hover:text-white text-center font-bold text-5xl pt-2'>
+                        5
+                    </p>
+                </div>
+                <div className="group bg-[#ffffff] w-[258px] h-[134px] rounded-lg shadow-md hover:bg-[#A7C7E7]">
+                    <p className='group-hover:text-white text-center pt-6 text-[#9FA2B4]'>
+                        Writting
+                    </p>
+                    <p className='group-hover:text-white text-center font-bold text-5xl pt-2'>
+                        72
+                    </p>
+                </div>
+                <div className="group bg-[#ffffff] w-[258px] h-[134px] rounded-lg shadow-md hover:bg-[#A7C7E7]">
+                    <p className='group-hover:text-white text-center pt-6 text-[#9FA2B4]'>
+                        Done
+                    </p>
+                    <p className='group-hover:text-white text-center font-bold text-5xl pt-2'>
+                        38
+                    </p>
+                </div>
+            </div>
+            <div className='flex space-x-4 flex-nowrap w-fit h-fit bg-[#F7F8FC]'>     
+                <div className="bg-[#ffffff] w-[529px] h-[336px] rounded-lg shadow-md">
+                    <p className='text-[#252733] text-xl font-bold pt-6 pl-6'>
+                        Story Management
+                    </p>
+                    <div className='flex pt-10 pl-6 pb-3'>
+                        <p className='text-[#252733] '>
+                            Approved chapters
+                        </p>
+                        <div className='pl-[300px]'>
+                        <p className='absolute right-[800px] text-[#252733]'> 
+                            4238
+                        </p>
+                        </div>
                     </div>
-                </button>
-            </div>   
-        </button>
-
-        <button className='flex w-[258px] h-[134px] mx-[25px]  border-[#c4c7ea]'>
-            <div className='bg-[#ffffff] rounded-[8px] px-[14px] py-[2px]  border-[2px]'>
-                <button className=' w-[258px] h-[134px]' >
-                    <div className='flex-col'>
-                        <div className='text-[#9FA2B4] text-[19px] font-semibold mt-[10px]'> Editors </div>
-                        <div className='text-[#252733] text-[60px] font-semibold'> 12 </div>
+                    <hr></hr>
+                    <div className='flex pt-5 pl-6 pb-3'>
+                        <p className='text-[#252733] '>
+                            Pending chapters
+                        </p>
+                        <p className='absolute right-[800px] text-[#252733]'> 
+                            1005
+                        </p>
                     </div>
-                </button>
-            </div>   
-        </button>
-
-        <button className='flex w-[258px] h-[134px] mx-[25px]  border-[#c4c7ea]'>
-            <div className='bg-[#ffffff] rounded-[8px] px-[14px] py-[2px]  border-[2px]'>
-                <button className=' w-[258px] h-[134px]' >
-                    <div className='flex-col'>
-                        <div className='text-[#9FA2B4] text-[19px] font-semibold mt-[10px]'> Writting </div>
-                        <div className='text-[#252733] text-[60px] font-semibold'> 30 </div>
+                    <hr></hr>
+                    <div className='flex pt-5 pl-6 pb-3'>
+                        <p className='text-[#252733] '>
+                            Paid amount
+                        </p>
+                        <p className='absolute right-[800px] text-[#252733]'> 
+                            1.023.020$
+                        </p>
                     </div>
-                </button>
-            </div>   
-
-        </button>
-        
-        <button className='flex w-[258px] h-[134px] mx-[25px]  border-[#c4c7ea]'>
-            <div className='bg-[#ffffff] rounded-[8px] px-[14px] py-[2px]  border-[2px]'>
-                <button className=' w-[258px] h-[134px]' >
-                    <div className='flex-col'>
-                        <div className='text-[#9FA2B4] text-[19px] font-semibold mt-[10px]'> Done </div>
-                        <div className='text-[#252733] text-[60px] font-semibold'> 3 </div>
+                    <hr></hr>
+                    <div className='flex pt-5 pl-6 pb-3'>
+                        <p className='text-[#252733] '>
+                            Unpaid amount
+                        </p>
+                        <p className='absolute right-[800px] text-[#252733]'> 
+                            523.123$
+                        </p>
                     </div>
-                </button>
-            </div>   
-        </button>
-    </div>
-
-    <div className='bg-[#111111] w-[1220px] h-[336px] ml-[10px] mt-[50px] relative'>
-        <div className='bg-[#ffffff] w-[546px] h-[336px] rounded-lg absolute left-0 flex'>
-        
-            <div className='text-[20px] absolute left-2 top-2 font-bold text-[#252733]'>Story Manager</div>
-            <div></div>
-
+                </div>
+                <div className="bg-[#ffffff] w-[529px] h-[336px] rounded-lg shadow-md">
+                    <p className='text-[#252733] text-xl font-bold pt-6 pl-6'>
+                        Account Management
+                    </p>
+                    <div className='flex pt-10 pl-6 pb-3'>
+                        <p className='text-[#252733] pr-[270px]'>
+                            Create account
+                        </p>
+                        <div className='bg-[#29CC97] rounded-[100px]'>
+                            <a href='/account/create'>
+                                <button className='mx-3 text-[#ffffff]' >
+                                    Create
+                                </button>
+                            </a>
+                        </div>   
+                    </div>
+                    <hr></hr>
+                    <div className='flex pt-5 pl-6 pb-3'>
+                        <p className='text-[#252733] pr-[270px]'>
+                            Delete account
+                        </p>
+                        <div className='bg-[#EC1D29] rounded-[100px]'>
+                            <button className='mx-3 text-[#ffffff]' >
+                                Delete
+                            </button>
+                        </div> 
+                    </div>
+                    <hr></hr>
+                    <div className='flex pt-5 pl-6 pb-3'>
+                        <p className='text-[#252733] pr-[330px]'>
+                            See all
+                        </p>
+                        <div className='bg-[#9d9d9d] rounded-[100px]'>
+                            <button className='mx-3 text-[#ffffff]' >
+                                See all
+                            </button>
+                        </div> 
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div className='bg-[#ffffff] w-[546px] h-[336px] rounded-lg absolute right-0'>
-            
-        </div>
-    </div>
-    
-    </div>
     )
 }
 
