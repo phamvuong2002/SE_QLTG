@@ -51,6 +51,22 @@ const getAllChaptersofStory = async(StoryID) => {
         return error.message;
     }
 }
+
+const createStory = async(data) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await utils.loadSqlQueries('authors');
+        const insert = await pool.request()
+                            .input('storyid', sql.Char(10), data.storyid)
+                            .input('authorid', sql.Char(10), data.authorid)
+                            .input('storyname', sql.NChar(30), data.storyname)
+                            .input('content', sql.Text, data.content)
+                            .query(sqlQueries.createstory);
+        return insert.recordset;
+    } catch (error) {
+        return error.message;
+    }
+}
 module.exports = {
-    countStory, storyDatalist, calPairUnpairStory, getAllChaptersofStory
+    countStory, storyDatalist, calPairUnpairStory, getAllChaptersofStory, createStory
 }

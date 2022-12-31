@@ -40,6 +40,15 @@ const getAllChaptersofStory = async (req, res, next) => {
         res.status(400).send(error.message);
     }
 }
+const createStory = async (req, res, next) => {
+    try {
+        const data = req.body;
+        const insert = await AuthorsData.createStory(data);
+        res.send(insert);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
 module.exports = {
-    countStory, storyDatalist, calPairUnpairStory, getAllChaptersofStory
+    countStory, storyDatalist, calPairUnpairStory, getAllChaptersofStory, createStory
 }
