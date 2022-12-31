@@ -4,29 +4,40 @@ import OverviewChapter  from './overviewChapter'
 import OverviewChapterList from './overviewChapterList' 
 import OverviewDraft_Outline from './overviewDraft_Outline'
 
-import { chapterdatalist } from './chapterdatalist'
+//import { chapterdatalist } from './chapterdatalist'
 
 import { useNavigate } from 'react-router-dom'
 
 import Write from './write'
 
+let chapterdatalist = []
+
+const authorname = localStorage.getItem('PersonName')
+const storyid = localStorage.getItem('storyid')
+const avt = localStorage.getItem('avt')
+const name = localStorage.getItem('name')
+const unpaid = localStorage.getItem('unpaid')
+const paid = localStorage.getItem('paid')
+const approve = localStorage.getItem('approve')
+
+
 const DetailStory_au = () => {
-
+    chapterdatalist = JSON.parse(localStorage.getItem('chapterdatalist')  )  
   const navigate = useNavigate()
-
+  let image = require('../../../assets/' + avt)
   return (
     <div className='bg-[#ffffff] w-[1122px] h-[657px] shadow-2xl rounded-lg border border-[#DFE0EB] ml-[70px]'>
         <div className='flex h-[180px]'>
 
-            <img src={eren} alt='Avt' className=' w-[120px] h-[120px] rounded-full my-[15px] mx-[15px]' />
+            <img src={image} alt='Avt' className=' w-[120px] h-[120px] rounded-full my-[15px] mx-[15px]' />
 
             <div className='flex-col'>
                 <div className='text-[36px] font-semibold'>
-                    Chú bé chăn cừu
+                    {name}
                 </div>
                 <div className='flex'>
                     <div className='text-[20px] text-[#C5C7CD]'>Author:</div>
-                    <div className='text-[20px] font-bold mx-[15px]'>You</div>
+                    <div className='text-[20px] font-bold mx-[15px]'>{authorname}</div>
                 </div>
             </div>
 
@@ -38,7 +49,7 @@ const DetailStory_au = () => {
                             <button className=' w-[152px] h-[90px]' >
                                 <div className='flex-col'>
                                     <div className='text-[#9FA2B4] text-[19px] font-semibold mt-[10px]'> Paid </div>
-                                    <div className='text-[#252733] text-[24px] font-semibold'> 60 </div>
+                                    <div className='text-[#252733] text-[24px] font-semibold'> {paid} </div>
                                 </div>
                             </button>
                         </div>   
@@ -49,7 +60,7 @@ const DetailStory_au = () => {
                             <button className=' w-[152px] h-[90px]' >
                                 <div className='flex-col'>
                                     <div className='text-[#9FA2B4] text-[19px] font-semibold mt-[10px]'> Unpaid </div>
-                                    <div className='text-[#252733] text-[24px] font-semibold'> 60 </div>
+                                    <div className='text-[#252733] text-[24px] font-semibold'> {unpaid} </div>
                                 </div>
                             </button>
                         </div>   
@@ -60,7 +71,7 @@ const DetailStory_au = () => {
                             <button className=' w-[152px] h-[90px]' >
                                 <div className='flex-col'>
                                     <div className='text-[#9FA2B4] text-[19px] font-semibold mt-[10px]'> Chapters </div>
-                                    <div className='text-[#252733] text-[24px] font-semibold'> 60 </div>
+                                    <div className='text-[#252733] text-[24px] font-semibold'> {approve} </div>
                                 </div>
                             </button>
                         </div>   
@@ -100,6 +111,7 @@ const DetailStory_au = () => {
             <div className='items-center px-5 h-[60px] bg-white border-t py-[10px] font-semibold'>
                 Chapters : {}
             </div>
+            
             <OverviewChapterList chapterData={chapterdatalist}/>
         </div>
         
