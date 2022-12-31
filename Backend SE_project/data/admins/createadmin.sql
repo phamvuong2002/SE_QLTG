@@ -1,0 +1,1 @@
+EXEC [dbo].[USP_2createAdmin] @adminid, @username, @password

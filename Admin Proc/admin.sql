@@ -1,0 +1,256 @@
+﻿USE QLTG
+GO
+
+----------------------------1----------------------------
+DROP PROC IF EXISTS USP_getAdminOverview
+GO
+
+CREATE 
+--ALTER 
+PROC USP_getAdminOverview
+	@adminid CHAR(10)
+AS
+	DECLARE @LIST TABLE (ID CHAR(15))
+	INSERT @LIST SELECT AUTHORID FROM AUTHOR WHERE ADMINID = @adminid
+	SELECT (SELECT COUNT(*) FROM @LIST) AS 'SLTG', (SELECT COUNT(*) FROM EDITOR  WHERE ADMINID = @adminid) AS 'SLBT',
+		(SELECT COUNT(*) FROM STORY WHERE AUTHORID IN (SELECT * FROM @LIST) AND STATE = 'ON GOING') AS 'ONPROGRESS', 
+		(SELECT COUNT(*) FROM STORY WHERE AUTHORID IN (SELECT * FROM @LIST) AND STATE = 'DONE') AS 'DONE'
+GO
+
+--EXEC USP_getAdminOverview @adminid = 'AD342720  '
+--SELECT * FROM AUTHOR WHERE ADMINID = 'AD342720  '
+--SELECT * FROM STORY WHERE AUTHORID = 'AU0886539 '
+--SELECT * FROM STORY WHERE AUTHORID = 'AU2024405 ' 
+--SELECT * FROM STORY WHERE AUTHORID = 'AU2563038 '
+--SELECT * FROM STORY WHERE AUTHORID = 'AU2671764 '
+--SELECT * FROM STORY WHERE AUTHORID = 'AU4101314 '
+
+
+--update STORY 
+--SET STATE = 'DONE'
+
+--declare @i int = 0
+--while @i < 10
+--begin
+--	update STORY
+--	set STATE = 'ON GOING'
+--	where STORYID = ( SELECT TOP 1 STORYID FROM STORY WHERE NUMOFCHAPS <> 0
+--							ORDER BY NEWID())
+--	set @i = @i + 1
+--end
+
+----------------------------2----------------------------
+DROP PROC IF EXISTS USP_getAllAccounts
+GO
+
+CREATE 
+--ALTER 
+PROC USP_getAllAccounts
+	@adminid CHAR(10)
+AS
+	DECLARE @LIST TABLE(ID CHAR(15), NAME CHAR(50), TYPE CHAR(10))
+	INSERT @LIST SELECT AUTHORID, AUTHORNAME, 'AUTHOR' AS TYPE FROM AUTHOR  WHERE ADMINID = @adminid
+	INSERT @LIST SELECT EDITORID, EDITORNAME, 'EDITOR' AS TYPE FROM EDITOR	WHERE ADMINID = @adminid
+	SELECT * FROM @LIST
+GO
+
+--EXEC USP_getAllAccounts
+
+----------------------------3----------------------------
+DROP PROC IF EXISTS USP_getAllAuthors 
+GO
+
+CREATE 
+--ALTER 
+PROC USP_getAllAuthors
+	@adminid CHAR(10)
+AS
+BEGIN TRAN
+	SELECT AU.AUTHORID, AU.AUTHORNAME, AU.USERNAME, (SELECT COUNT(*) FROM STORY ST WHERE ST.AUTHORID = AU.AUTHORID) AS 'SL'
+	FROM AUTHOR AU WHERE AU.ADMINID = @adminid
+COMMIT TRAN
+GO
+
+--EXEC USP_getAllAuthors
+
+----------------------------4----------------------------
+DROP PROC IF EXISTS USP_getAllEditors
+GO
+
+CREATE 
+--ALTER 
+PROC USP_getAllEditors
+	@adminid CHAR(10)
+AS
+BEGIN TRAN
+	SELECT E.EDITORID, E.EDITORNAME, (SELECT COUNT(*) FROM AUTHOR AU WHERE EDITORID = E.EDITORID) AS 'SLTG', (SELECT COUNT(*) FROM STORY WHERE EDITORID = E.EDITORID) AS 'SLT'
+	FROM EDITOR E WHERE E.ADMINID = @adminid
+	--GROUP BY E.EDITORID, E.EDITORNAME
+COMMIT TRAN
+GO
+
+--EXEC USP_getAllEditors
+--SELECT COUNT(*) FROM STORY WHERE EDITORID = 'ED785700      '
+--SELECT COUNT(*) FROM AUTHOR WHERE EDITORID = 'ED785700      '
+
+----------------------------5----------------------------
+DROP PROC IF EXISTS USP_createAdmin
+GO
+
+CREATE 
+--ALTER 
+PROC USP_createAdmin
+	@adminid CHAR(10),
+	@username CHAR(20),
+	@password CHAR(15)
+AS
+BEGIN TRAN
+	IF EXISTS (SELECT ADMINID FROM ADMIN WHERE TRIM(ADMINID) = TRIM(@adminid))
+		BEGIN
+			SELECT 'ID IS EXISTED' AS 'ERROR'
+			ROLLBACK TRAN
+			RETURN 0
+		END
+
+	INSERT ADMIN (ADMINID, PASSWORD, USERNAME) 
+	VALUES (@adminid, @password, @username)
+	SELECT 'ADDING ADMIN SUCCESSFULLY' AS '1'
+COMMIT TRAN
+RETURN 1
+GO
+
+----------------------------6----------------------------
+DROP PROC IF EXISTS USP_createAuthor
+GO
+
+CREATE 
+--ALTER 
+PROC USP_createAuthor
+	@authorid CHAR(10),
+	@adminid CHAR(10),
+	@username CHAR(20),
+	@password CHAR(15)
+AS
+BEGIN TRAN
+	IF EXISTS (SELECT AUTHORID FROM AUTHOR WHERE TRIM(AUTHORID) = TRIM(@authorid))
+		BEGIN
+			SELECT 'ID IS EXISTED' AS 'ERROR'
+			ROLLBACK TRAN
+			RETURN 0
+		END
+
+	INSERT AUTHOR (AUTHORID, ADMINID, PASSWORD, USERNAME) 
+	VALUES (@authorid, @adminid, @password, @username)
+	SELECT 'ADDING AUTHOR SUCCESSFULLY' AS '1'
+COMMIT TRAN
+RETURN 1	
+GO
+
+----------------------------7----------------------------
+DROP PROC IF EXISTS USP_createEditor
+GO
+
+CREATE 
+--ALTER 
+PROC USP_createEditor
+	@editorid CHAR(10),
+	@adminid CHAR(10),
+	@username CHAR(20),
+	@password CHAR(15)
+AS
+BEGIN TRAN
+	IF EXISTS (SELECT EDITORID FROM EDITOR WHERE TRIM(EDITORID) = TRIM(@editorid))
+		BEGIN
+			SELECT 'ID IS EXISTED' AS 'ERROR'
+			ROLLBACK TRAN
+			RETURN 0
+		END
+
+	INSERT EDITOR (EDITORID, ADMINID, PASSWORD, USERNAME) 
+	VALUES (@editorid, @adminid, @password, @username)
+	SELECT 'ADDING EDITOR SUCCESSFULLY' AS '1'
+COMMIT TRAN
+RETURN 1	
+GO
+
+----------------------------8----------------------------
+DROP PROC IF EXISTS USP_deleteAdmin
+GO
+
+CREATE 
+--ALTER 
+PROC USP_deleteAdmin
+	@adminid CHAR(10)
+AS
+BEGIN TRAN
+	IF NOT EXISTS (SELECT ADMINID FROM ADMIN WHERE TRIM(ADMINID) = TRIM(@adminid))
+		BEGIN
+			SELECT 'ID IS NOT EXIST' AS 'ERROR'
+			ROLLBACK TRAN
+			RETURN 0
+		END
+
+	DELETE FROM ADMIN WHERE TRIM(ADMINID) = TRIM(@adminid)
+	SELECT 'DELETE ADMIN ' + @adminid + ' SUCCESSFULLY' AS '1'
+COMMIT TRAN
+RETURN 1	
+GO
+
+----------------------------9----------------------------
+DROP PROC IF EXISTS USP_deleteAuthor
+GO
+
+CREATE 
+--ALTER 
+PROC USP_deleteAuthor
+	@authorid CHAR(10)
+AS
+BEGIN TRAN
+	IF NOT EXISTS (SELECT AUTHORID FROM AUTHOR WHERE TRIM(AUTHORID) = TRIM(@authorid))
+		BEGIN
+			SELECT 'ID IS NOT EXIST' AS 'ERROR'
+			ROLLBACK TRAN
+			RETURN 0
+		END
+
+	DELETE FROM AUTHOR WHERE TRIM(AUTHORID) = TRIM(@authorid)
+	SELECT 'DELETE AUTHOR ' + @authorid + ' SUCCESSFULLY' AS '1'
+COMMIT TRAN
+RETURN 1	
+GO
+
+----------------------------10----------------------------
+DROP PROC IF EXISTS USP_deleteEditor
+GO
+
+CREATE 
+--ALTER 
+PROC USP_deleteEditor
+	@editorid CHAR(10)
+AS
+BEGIN TRAN
+	IF NOT EXISTS (SELECT EDITORID FROM EDITOR WHERE TRIM(EDITORID) = TRIM(@editorid))
+		BEGIN
+			SELECT 'ID IS NOT EXIST' AS 'ERROR'
+			ROLLBACK TRAN
+			RETURN 0
+		END
+
+	DELETE FROM EDITOR WHERE TRIM(EDITORID) = TRIM(@editorid)
+	SELECT 'DELETE EDITOR ' + @editorid + ' SUCCESSFULLY' AS '1'
+COMMIT TRAN
+RETURN 1	
+GO
+
+SELECT * FROM EDITOR
+
+--declare @image varchar(30),@i int = 0
+--while @i < 50
+--begin
+--	set @image = 'avatar_vio_' + CAST(FLOOR(RAND()*(20-1)+1) as varchar) + '.jpg'
+--	update EDITOR
+--	set AVATAR = @image
+--	where EDITORID = ( SELECT TOP 1 STORYID FROM STORY
+--							ORDER BY NEWID())
+--	set @i = @i + 1
+--end

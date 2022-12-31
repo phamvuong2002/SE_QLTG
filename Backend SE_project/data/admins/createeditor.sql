@@ -1,0 +1,1 @@
+EXEC [dbo].[USP_createEditor] @editorid, @adminid, @username, @password 
