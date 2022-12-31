@@ -20,12 +20,11 @@ async function connectfetch(){
             data[i]["paid"] = data_cal[0].paid.toFixed(2)
         }
         storydatalist = data
-
     }
 }
 connectfetch()
 
-export {storydatalist }
+export { storydatalist }
 // export const storydatalist = [
 //     {
 //         name:'Chú bé chăn cừu',

@@ -1,1 +1,1 @@
-exec [dbo].[storydatalist] @editorid
+exec [dbo].[selectAuthorList] @editorid

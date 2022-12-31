@@ -34,16 +34,18 @@ begin
 		return 0
 	end
 	
-	select distinct AUTHORNAME, count(STORYID) as NUMOFSTORYs, sum(NUMOFCHAPS)
+	select distinct AUTHORNAME, S.AVATAR ,count(STORYID) as NUMOFSTORY, sum(NUMOFCHAPS) as NUMOFCHAPS
 	from STORY S join AUTHOR A ON S.AUTHORID = A.AUTHORID
 	where A.EDITORID = @editorid
-	group by AUTHORNAME
+	group by AUTHORNAME, S.AVATAR
 
 end
 go
 exec selectAuthorList 'ED841430  '
 
 
+
+select * from STORY
 
 
 

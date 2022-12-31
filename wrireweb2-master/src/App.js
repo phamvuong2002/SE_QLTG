@@ -29,7 +29,7 @@ function App() {
   if (temp !== null) {
     role = temp;
   }
-  role = 'author'
+  role = 'editor'
   //localStorage.removeItem('login');
   return (
     <>

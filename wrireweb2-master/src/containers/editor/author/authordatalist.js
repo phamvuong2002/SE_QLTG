@@ -1,41 +1,54 @@
 import { eren } from "../../../assets";
 
-export const authordatalist = [
-    {
-        name:'Lê Tiến',
-        pen_name:'Alex',
-        avt: eren,
-        story:3,
-        chapter:200,
-        paid_stt:'paid'
-    }, {
-        name:'Lê Tiến',
-        pen_name:'Alex',
-        avt: eren,
-        story:3,
-        chapter:200,
-        paid_stt:'paid'
-    }, {
-        name:'Lê Tiến',
-        pen_name:'Alex',
-        avt: eren,
-        story:3,
-        chapter:200,
-        paid_stt:'paid'
-    }, {
-        name:'Lê Tiến',
-        pen_name:'Alex',
-        avt: eren,
-        story:3,
-        chapter:200,
-        paid_stt:'paid'
-    }, {
-        name:'Lê Tiến',
-        pen_name:'Alex',
-        avt: eren,
-        story:3,
-        chapter:200,
-        paid_stt:'paid'
-    },
+const editorid = localStorage.getItem("editorid");
+let authordatalist = []
+async function connectfetch(){
+    let url = "http://localhost:8080/editor/storydatalist/"
+    url = url + editorid 
+    const response = await fetch(url);
+    const data = await response.json();
+    if(Object.keys(data[0]) === 'ERROR'){
+        alert("ERROR: " + data[0].ERROR)
+    }
+    else{ 
+        authordatalist.push(data)
+    }
+}
+
+connectfetch()
+console.log(authordatalist)
+export { authordatalist } 
+// export const authordatalist = [
+//     {
+//         name:'Lê Tiến',
+//         avt: eren, //bỏ pen_name
+//         story:3,
+//         chapter:200,
+//         paid_stt:'check' //đổi paid thành check
+//     }, {
+//         name:'Lê Tiến',
+//         avt: eren,
+//         story:3,
+//         chapter:200,
+//         paid_stt:'check'
+//     }, {
+//         name:'Lê Tiến',
+//         avt: eren,
+//         story:3,
+//         chapter:200,
+//         paid_stt:'check'
+//     }, {
+//         name:'Lê Tiến',
+//         avt: eren,
+//         story:3,
+//         chapter:200,
+//         paid_stt:'check'
+//     }, {
+//         name:'Lê Tiến',
+//         avt: eren,
+//         story:3,
+//         chapter:200,
+//         paid_stt:'check'
+//     },
     
-]
+// ]
