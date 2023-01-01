@@ -42,6 +42,16 @@ const get_all_editors = async (req, res, next) => {
     }
 }
 
+const get_all_stories = async (req, res, next) => {
+    try {
+        const adminid = req.params.id;
+        const editorslist = await AdminsData.getAllStories(adminid);
+        res.send(editorslist);        
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+
 const create_Admin = async (req, res, next) => {
     try {
         const data = req.body;
@@ -114,5 +124,5 @@ const delete_Editor = async (req, res, next) => {
 }
 
 module.exports = {
-    admin_overview, get_all_accounts, get_all_authors, get_all_editors, create_Admin, create_Author, create_Editor, delete_Admin, delete_Author, delete_Editor
+    admin_overview, get_all_accounts, get_all_authors, get_all_editors, get_all_stories, create_Admin, create_Author, create_Editor, delete_Admin, delete_Author, delete_Editor
 }

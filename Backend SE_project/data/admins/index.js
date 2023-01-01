@@ -55,6 +55,19 @@ const getAllEditors = async (adminid) => {
     }
 }
 
+const getAllStories = async (adminid) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await utils.loadSqlQueries('admins');
+        const storyList = await pool.request()
+                            .input('adminid', sql.Char(10), adminid)
+                            .query(sqlQueries.getStories);
+        return storyList.recordset;
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 const createAdmin = async (data) => {
     try {
         let pool = await sql.connect(config.sql);
@@ -164,5 +177,5 @@ const deleteEditor = async (editorid) => {
     }
 }
 module.exports = {
-    getAdminOverview, getAllAccounts, getAllAuthors, getAllEditors, createAdmin, createAuthor, createEditor, deleteAdmin, deleteAuthor, deleteEditor
+    getAdminOverview, getAllAccounts, getAllAuthors, getAllEditors, getAllStories, createAdmin, createAuthor, createEditor, deleteAdmin, deleteAuthor, deleteEditor
 }

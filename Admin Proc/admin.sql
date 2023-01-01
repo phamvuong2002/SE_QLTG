@@ -40,7 +40,7 @@ GO
 --end
 
 ----------------------------2----------------------------
-DROP PROC IF EXISTS USP_getAllAccounts
+DROP PROC IF EXISTS USP_getAllAccounts 
 GO
 
 CREATE 
@@ -48,13 +48,13 @@ CREATE
 PROC USP_getAllAccounts
 	@adminid CHAR(10)
 AS
-	DECLARE @LIST TABLE(ID CHAR(15), NAME CHAR(50), TYPE CHAR(10))
-	INSERT @LIST SELECT AUTHORID, AUTHORNAME, 'AUTHOR' AS TYPE FROM AUTHOR  WHERE ADMINID = @adminid
-	INSERT @LIST SELECT EDITORID, EDITORNAME, 'EDITOR' AS TYPE FROM EDITOR	WHERE ADMINID = @adminid
+	DECLARE @LIST TABLE(ID CHAR(15), NAME CHAR(50), AVATAR VARCHAR(50), TYPE CHAR(10))
+	INSERT @LIST SELECT AUTHORID, AUTHORNAME, AVATAR, 'AUTHOR' AS 'TYPE' FROM AUTHOR  WHERE ADMINID = @adminid
+	INSERT @LIST SELECT EDITORID, EDITORNAME, AVATAR, 'EDITOR' AS 'TYPE' FROM EDITOR	WHERE ADMINID = @adminid
 	SELECT * FROM @LIST
 GO
 
---EXEC USP_getAllAccounts
+--EXEC USP_getAllAccounts @adminid = 'AD342720  '
 
 ----------------------------3----------------------------
 DROP PROC IF EXISTS USP_getAllAuthors 
@@ -66,12 +66,16 @@ PROC USP_getAllAuthors
 	@adminid CHAR(10)
 AS
 BEGIN TRAN
-	SELECT AU.AUTHORID, AU.AUTHORNAME, AU.USERNAME, (SELECT COUNT(*) FROM STORY ST WHERE ST.AUTHORID = AU.AUTHORID) AS 'SL'
-	FROM AUTHOR AU WHERE AU.ADMINID = @adminid
+	DECLARE @AUTHORS TABLE (AUTHORID CHAR(10), AUTHORNAME NCHAR(50), PENNAME CHAR(20), AVATAR CHAR(50), SLT INT, SLC INT)
+	INSERT @AUTHORS SELECT AU.AUTHORID, AU.AUTHORNAME, AU.USERNAME AS 'PENNAME', AVATAR, (SELECT COUNT(*) FROM STORY WHERE AUTHORID = AU.AUTHORID) AS 'SLT', (SELECT SUM(NUMOFCHAPS) FROM STORY WHERE AUTHORID = AU.AUTHORID) AS 'SLC'
+					FROM AUTHOR AU WHERE AU.ADMINID = @adminid
+	UPDATE @AUTHORS
+	SET SLC = 0 WHERE SLC IS NULL
+	SELECT * FROM @AUTHORS	
 COMMIT TRAN
 GO
 
---EXEC USP_getAllAuthors
+--EXEC USP_getAllAuthors @adminid = 'AD342720  '
 
 ----------------------------4----------------------------
 DROP PROC IF EXISTS USP_getAllEditors
@@ -83,17 +87,40 @@ PROC USP_getAllEditors
 	@adminid CHAR(10)
 AS
 BEGIN TRAN
-	SELECT E.EDITORID, E.EDITORNAME, (SELECT COUNT(*) FROM AUTHOR AU WHERE EDITORID = E.EDITORID) AS 'SLTG', (SELECT COUNT(*) FROM STORY WHERE EDITORID = E.EDITORID) AS 'SLT'
+	SELECT E.EDITORID, E.EDITORNAME, E.USERNAME AS 'PENNAME', AVATAR, (SELECT COUNT(*) FROM AUTHOR AU WHERE EDITORID = E.EDITORID) AS 'SLTG', (SELECT COUNT(*) FROM STORY WHERE EDITORID = E.EDITORID) AS 'SLT'
 	FROM EDITOR E WHERE E.ADMINID = @adminid
 	--GROUP BY E.EDITORID, E.EDITORNAME
 COMMIT TRAN
 GO
 
---EXEC USP_getAllEditors
+--EXEC USP_getAllEditors @adminid = 'AD328644    '
 --SELECT COUNT(*) FROM STORY WHERE EDITORID = 'ED785700      '
 --SELECT COUNT(*) FROM AUTHOR WHERE EDITORID = 'ED785700      '
 
 ----------------------------5----------------------------
+DROP PROC IF EXISTS USP_getAllStories
+GO
+
+CREATE 
+--ALTER 
+PROC USP_getAllStories
+	@adminid CHAR(10)
+AS
+BEGIN TRAN
+	DECLARE @LIST TABLE(ID CHAR(15))
+	INSERT @LIST SELECT AUTHORID FROM AUTHOR  WHERE ADMINID = @adminid
+	SELECT S.STORYID, S.STORYNAME, S.NUMOFCHAPS, S.AVATAR, 'Chapters' AS 'PROCESS'
+	FROM STORY S WHERE S.AUTHORID IN (SELECT * FROM @LIST)
+COMMIT TRAN
+GO
+
+--EXEC USP_getAllStories @adminid = 'AD342720  '
+--SELECT * FROM STORY WHERE STORYID NOT IN (SELECT STORYID FROM CHAPTER)
+--SELECT * FROM STORY WHERE STORYID NOT IN (SELECT STORYID FROM OUTLINE)
+--SELECT * FROM STORY WHERE STORYID NOT IN (SELECT STORYID FROM DRAFT)
+
+
+----------------------------6----------------------------
 DROP PROC IF EXISTS USP_createAdmin
 GO
 
@@ -112,14 +139,14 @@ BEGIN TRAN
 			RETURN 0
 		END
 
-	INSERT ADMIN (ADMINID, PASSWORD, USERNAME) 
-	VALUES (@adminid, @password, @username)
+	INSERT ADMIN (ADMINID, PASSWORD, USERNAME, AVATAR) 
+	VALUES (@adminid, @password, @username, 'empty.png')
 	SELECT 'ADDING ADMIN SUCCESSFULLY' AS '1'
 COMMIT TRAN
 RETURN 1
 GO
 
-----------------------------6----------------------------
+----------------------------7----------------------------
 DROP PROC IF EXISTS USP_createAuthor
 GO
 
@@ -139,14 +166,14 @@ BEGIN TRAN
 			RETURN 0
 		END
 
-	INSERT AUTHOR (AUTHORID, ADMINID, PASSWORD, USERNAME) 
-	VALUES (@authorid, @adminid, @password, @username)
+	INSERT AUTHOR (AUTHORID, ADMINID, PASSWORD, USERNAME, AVATAR) 
+	VALUES (@authorid, @adminid, @password, @username, 'empty.png')
 	SELECT 'ADDING AUTHOR SUCCESSFULLY' AS '1'
 COMMIT TRAN
 RETURN 1	
 GO
 
-----------------------------7----------------------------
+----------------------------8----------------------------
 DROP PROC IF EXISTS USP_createEditor
 GO
 
@@ -166,14 +193,14 @@ BEGIN TRAN
 			RETURN 0
 		END
 
-	INSERT EDITOR (EDITORID, ADMINID, PASSWORD, USERNAME) 
-	VALUES (@editorid, @adminid, @password, @username)
+	INSERT EDITOR (EDITORID, ADMINID, PASSWORD, USERNAME, AVATAR) 
+	VALUES (@editorid, @adminid, @password, @username, 'empty.png')
 	SELECT 'ADDING EDITOR SUCCESSFULLY' AS '1'
 COMMIT TRAN
 RETURN 1	
 GO
 
-----------------------------8----------------------------
+----------------------------9----------------------------
 DROP PROC IF EXISTS USP_deleteAdmin
 GO
 
@@ -196,7 +223,7 @@ COMMIT TRAN
 RETURN 1	
 GO
 
-----------------------------9----------------------------
+----------------------------10----------------------------
 DROP PROC IF EXISTS USP_deleteAuthor
 GO
 
@@ -219,7 +246,7 @@ COMMIT TRAN
 RETURN 1	
 GO
 
-----------------------------10----------------------------
+----------------------------11----------------------------
 DROP PROC IF EXISTS USP_deleteEditor
 GO
 
@@ -242,15 +269,19 @@ COMMIT TRAN
 RETURN 1	
 GO
 
-SELECT * FROM EDITOR
+--ALTER TABLE STORY
+--ADD AVATAR varchar(50)
 
 --declare @image varchar(30),@i int = 0
 --while @i < 50
 --begin
 --	set @image = 'avatar_vio_' + CAST(FLOOR(RAND()*(20-1)+1) as varchar) + '.jpg'
---	update EDITOR
+--	--print @image
+--	update STORY
 --	set AVATAR = @image
---	where EDITORID = ( SELECT TOP 1 STORYID FROM STORY
+--	where STORYID = ( SELECT TOP 1 STORYID FROM STORY
 --							ORDER BY NEWID())
 --	set @i = @i + 1
 --end
+
+--SELECT * FROM STORY
