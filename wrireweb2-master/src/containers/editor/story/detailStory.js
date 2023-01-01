@@ -12,16 +12,16 @@ import Write from './read'
 
 let chapterdatalist = []
 
-const authorname = localStorage.getItem('PersonName')
-const storyid = localStorage.getItem('storyid')
-const avt = localStorage.getItem('avt')
-const name = localStorage.getItem('name')
-const unpaid = localStorage.getItem('unpaid')
-const paid = localStorage.getItem('paid')
-const approve = localStorage.getItem('approve')
+const authorname = localStorage.getItem('editor_PersonName')
+const storyid = localStorage.getItem('editor_storyid')
+const avt = localStorage.getItem('editor_avt')
+const name = localStorage.getItem('editor_name')
+const unpaid = localStorage.getItem('editor_unpaid')
+const paid = localStorage.getItem('editor_paid')
+const approve = localStorage.getItem('editor_approve')
 
 const DetailStory_ed = () => {
-    chapterdatalist = JSON.parse(localStorage.getItem('chapterdatalist'))
+    chapterdatalist = JSON.parse(localStorage.getItem('editor_chapterdatalist'))
     // console.log(chapterdatalist)
     // chapterdatalist = localStorage.getItem('chapterdatalist')
     // const navigate = useNavigate()

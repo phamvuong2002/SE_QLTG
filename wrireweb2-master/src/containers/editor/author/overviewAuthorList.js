@@ -6,7 +6,7 @@ const OverviewAuthorList = ({authorData}) => {
   return (
     
     <div className='py-1'>
-         {authorData[0].map((data)  => (
+         {authorData.map((data)  => (
           
         <OverviewAuthor 
         

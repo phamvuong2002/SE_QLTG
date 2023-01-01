@@ -11,13 +11,12 @@ async function connectfetch(){
         alert("ERROR: " + data[0].ERROR)
     }
     else{ 
-        authordatalist.push(data)
-        // authordatalist = data
+        authordatalist = data
     }
 }
-console.log("t",authordatalist)
+
 connectfetch()
-console.log("s",authordatalist)
+
 export { authordatalist } 
 // export const authordatalist = [
 //     {
