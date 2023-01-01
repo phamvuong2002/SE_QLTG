@@ -1,7 +1,7 @@
 import React from 'react'
 import OverviewChapter from './overviewChapter'
 
-const OverviewChapterList = ({chapterData}) => {
+let OverviewChapterList = ({chapterData}) => {
   return (
     <div className='overflow-y-scroll h-[220px]'>
         {chapterData.map((data) => (

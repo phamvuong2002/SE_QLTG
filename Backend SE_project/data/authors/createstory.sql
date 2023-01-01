@@ -1,0 +1,1 @@
+exec [dbo].[createStory] @authorid, @storyid, @storyname, @content

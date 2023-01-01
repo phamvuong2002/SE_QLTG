@@ -5,5 +5,6 @@ export {default as Author} from './author';
 export {default as Editor} from './editor';
 export {default as Story} from './story';
 export {default as Settting} from './setting';
+export {default as Login} from './login';
 
 

@@ -9,6 +9,6 @@ export {default as OverviewChapterList_ed} from './overviewChapterList';
 
 export {default as OverviewDraft_Outline_ed} from './overviewDraft_Outline';
 
-export {default as Write} from './read';
+export {default as Read_ed} from './read';
 
 export {default as Content} from './content';
