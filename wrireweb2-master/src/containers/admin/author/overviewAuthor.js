@@ -1,12 +1,23 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
-const OverviewAuthor = ({avt, name, pen_name, chapter, story, paid_stt}) => {
-const navigate = useNavigate()
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+const OverviewAuthor = ({authorid, avt, name, penname, chapter, story/*, paid_stt*/}) => {
+  const navigate = useNavigate();
+  localStorage.removeItem('ad_author');
+  
+  const HandleClick = () => {
+    // console.log(storyid);
+    var ad_author = {"authorid": authorid, "name": name, "avt": avt};
+    localStorage.setItem('ad_author', JSON.stringify(ad_author));
+    navigate('/author/detail');
+    // window.location.href='/story/detail';
+  };
+
   return (
-    <div className='flex items-center w-full bg-white px-20 py-[20px] border-t-2 border-[#DFE0EB] my-2' onClick={()=>navigate('/author/detail')}>
+    <div className='flex items-center w-full bg-white px-20 py-[20px] border-t-2 border-[#DFE0EB] my-2' onClick={HandleClick}>
         {/* avt */}
         <div className=''>
-            <img src={avt} alt='avt' className='rounded-full w-[44px] h-[44px] '/>
+            <img src={'/' + avt} alt='avt' className='rounded-full w-[44px] h-[44px] '/>
         </div>
 
         <div className='font-semibold mr-[30px] ml-5'>
@@ -14,7 +25,7 @@ const navigate = useNavigate()
         </div>
 
         <div className='font-semibold mr-[150px] ml-5'>
-            {pen_name}
+            {penname}
         </div>
 
         <div className='flex-col mr-[90px] items-center'>
@@ -26,11 +37,11 @@ const navigate = useNavigate()
             </div>
         </div>
         
-        <div className='bg-[#F12B2C] rounded-3xl px-5 ml-40 items-center'>
+        {/* <div className='bg-[#F12B2C] rounded-3xl px-5 ml-40 items-center'>
             <button className='mx-3 text-[#ffffff]' >
                 {paid_stt}
             </button>
-        </div>
+        </div> */}
     </div>
   )
 }

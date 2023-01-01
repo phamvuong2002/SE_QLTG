@@ -10,11 +10,13 @@ CREATE
 PROC USP_getAdminOverview
 	@adminid CHAR(10)
 AS
+BEGIN
 	DECLARE @LIST TABLE (ID CHAR(15))
 	INSERT @LIST SELECT AUTHORID FROM AUTHOR WHERE ADMINID = @adminid
 	SELECT (SELECT COUNT(*) FROM @LIST) AS 'SLTG', (SELECT COUNT(*) FROM EDITOR  WHERE ADMINID = @adminid) AS 'SLBT',
 		(SELECT COUNT(*) FROM STORY WHERE AUTHORID IN (SELECT * FROM @LIST) AND STATE = 'ON GOING') AS 'ONPROGRESS', 
 		(SELECT COUNT(*) FROM STORY WHERE AUTHORID IN (SELECT * FROM @LIST) AND STATE = 'DONE') AS 'DONE'
+END
 GO
 
 --EXEC USP_getAdminOverview @adminid = 'AD342720  '
@@ -25,20 +27,6 @@ GO
 --SELECT * FROM STORY WHERE AUTHORID = 'AU2671764 '
 --SELECT * FROM STORY WHERE AUTHORID = 'AU4101314 '
 
-
---update STORY 
---SET STATE = 'DONE'
-
---declare @i int = 0
---while @i < 10
---begin
---	update STORY
---	set STATE = 'ON GOING'
---	where STORYID = ( SELECT TOP 1 STORYID FROM STORY WHERE NUMOFCHAPS <> 0
---							ORDER BY NEWID())
---	set @i = @i + 1
---end
-
 ----------------------------2----------------------------
 DROP PROC IF EXISTS USP_getAllAccounts 
 GO
@@ -48,10 +36,18 @@ CREATE
 PROC USP_getAllAccounts
 	@adminid CHAR(10)
 AS
+BEGIN
+	IF NOT EXISTS (SELECT AUTHORID FROM AUTHOR  WHERE ADMINID = @adminid)
+	AND NOT EXISTS (SELECT EDITORID FROM EDITOR  WHERE ADMINID = @adminid)
+		BEGIN
+			SELECT 'ADMIN HAS NO AUTHOR, ADMIN' ERROR
+			RETURN 0
+		END
 	DECLARE @LIST TABLE(ID CHAR(15), NAME CHAR(50), AVATAR VARCHAR(50), TYPE CHAR(10))
 	INSERT @LIST SELECT AUTHORID, AUTHORNAME, AVATAR, 'AUTHOR' AS 'TYPE' FROM AUTHOR  WHERE ADMINID = @adminid
 	INSERT @LIST SELECT EDITORID, EDITORNAME, AVATAR, 'EDITOR' AS 'TYPE' FROM EDITOR	WHERE ADMINID = @adminid
 	SELECT * FROM @LIST
+END
 GO
 
 --EXEC USP_getAllAccounts @adminid = 'AD342720  '
@@ -65,17 +61,27 @@ CREATE
 PROC USP_getAllAuthors
 	@adminid CHAR(10)
 AS
-BEGIN TRAN
+BEGIN 
+	IF NOT EXISTS (SELECT AUTHORID FROM AUTHOR  WHERE ADMINID = @adminid)
+	AND NOT EXISTS (SELECT EDITORID FROM EDITOR  WHERE ADMINID = @adminid)
+		BEGIN
+			SELECT 'ADMIN HAS NO AUTHOR' ERROR
+			RETURN 0
+		END
+
 	DECLARE @AUTHORS TABLE (AUTHORID CHAR(10), AUTHORNAME NCHAR(50), PENNAME CHAR(20), AVATAR CHAR(50), SLT INT, SLC INT)
 	INSERT @AUTHORS SELECT AU.AUTHORID, AU.AUTHORNAME, AU.USERNAME AS 'PENNAME', AVATAR, (SELECT COUNT(*) FROM STORY WHERE AUTHORID = AU.AUTHORID) AS 'SLT', (SELECT SUM(NUMOFCHAPS) FROM STORY WHERE AUTHORID = AU.AUTHORID) AS 'SLC'
 					FROM AUTHOR AU WHERE AU.ADMINID = @adminid
 	UPDATE @AUTHORS
 	SET SLC = 0 WHERE SLC IS NULL
 	SELECT * FROM @AUTHORS	
-COMMIT TRAN
+END 
 GO
 
---EXEC USP_getAllAuthors @adminid = 'AD342720  '
+--SELECT * FROM AUTHOR WHERE AUTHORID IN (SELECT AUTHORID FROM @T) 
+--EXEC USP_getAllEditors @adminid = 'AD342720'
+--SELECT * FROM EDITOR WHERE ADMINID = 'AD342720' 
+--select * from story where EDITORID = 'ED779066' or EDITORID = 'ED949502'
 
 ----------------------------4----------------------------
 DROP PROC IF EXISTS USP_getAllEditors
@@ -86,11 +92,17 @@ CREATE
 PROC USP_getAllEditors
 	@adminid CHAR(10)
 AS
-BEGIN TRAN
+BEGIN 
+	IF NOT EXISTS (SELECT EDITORID FROM EDITOR  WHERE ADMINID = @adminid)
+		BEGIN
+			SELECT 'ADMIN HAS NO EDITOR' ERROR
+			RETURN 0
+		END
+
 	SELECT E.EDITORID, E.EDITORNAME, E.USERNAME AS 'PENNAME', AVATAR, (SELECT COUNT(*) FROM AUTHOR AU WHERE EDITORID = E.EDITORID) AS 'SLTG', (SELECT COUNT(*) FROM STORY WHERE EDITORID = E.EDITORID) AS 'SLT'
 	FROM EDITOR E WHERE E.ADMINID = @adminid
 	--GROUP BY E.EDITORID, E.EDITORNAME
-COMMIT TRAN
+END 
 GO
 
 --EXEC USP_getAllEditors @adminid = 'AD328644    '
@@ -106,12 +118,25 @@ CREATE
 PROC USP_getAllStories
 	@adminid CHAR(10)
 AS
-BEGIN TRAN
+BEGIN
+	IF NOT EXISTS (SELECT AUTHORID FROM AUTHOR  WHERE ADMINID = @adminid)
+		BEGIN
+			SELECT 'ADMIN HAS NO AUTHOR' ERROR
+			RETURN 0
+		END
+
 	DECLARE @LIST TABLE(ID CHAR(15))
 	INSERT @LIST SELECT AUTHORID FROM AUTHOR  WHERE ADMINID = @adminid
+
+	IF NOT EXISTS (SELECT S.STORYID	FROM STORY S WHERE S.AUTHORID IN (SELECT * FROM @LIST))
+		BEGIN
+			SELECT 'AUTHORS HAS NO STORY ' ERROR
+			RETURN 0
+		END
+
 	SELECT S.STORYID, S.STORYNAME, S.NUMOFCHAPS, S.AVATAR, 'Chapters' AS 'PROCESS'
 	FROM STORY S WHERE S.AUTHORID IN (SELECT * FROM @LIST)
-COMMIT TRAN
+END 
 GO
 
 --EXEC USP_getAllStories @adminid = 'AD342720  '
@@ -269,19 +294,140 @@ COMMIT TRAN
 RETURN 1	
 GO
 
---ALTER TABLE STORY
---ADD AVATAR varchar(50)
+----------------------------12----------------------------
+DROP PROC IF EXISTS USP_getAuthorFromEditor 
+GO
 
---declare @image varchar(30),@i int = 0
---while @i < 50
---begin
---	set @image = 'avatar_vio_' + CAST(FLOOR(RAND()*(20-1)+1) as varchar) + '.jpg'
---	--print @image
---	update STORY
---	set AVATAR = @image
---	where STORYID = ( SELECT TOP 1 STORYID FROM STORY
---							ORDER BY NEWID())
---	set @i = @i + 1
---end
+CREATE 
+--ALTER 
+PROC USP_getAuthorFromEditor
+	@editorid CHAR(10)
+AS
+BEGIN TRAN
+	IF NOT EXISTS (SELECT AUTHORID FROM AUTHOR WHERE EDITORID = @editorid)
+		BEGIN
+			SELECT 'EDITOR HAS NO AUTHOR' ERROR
+			RETURN 0
+		END
 
+	DECLARE @AUTHORS TABLE (AUTHORID CHAR(10), AUTHORNAME NCHAR(50), PENNAME CHAR(20), AVATAR CHAR(50), SLT INT, SLC INT)
+	INSERT @AUTHORS SELECT AU.AUTHORID, AU.AUTHORNAME, AU.USERNAME AS 'PENNAME', AVATAR, (SELECT COUNT(*) FROM STORY WHERE AUTHORID = AU.AUTHORID) AS 'SLT', 
+					(SELECT SUM(NUMOFCHAPS) FROM STORY WHERE AUTHORID = AU.AUTHORID) AS 'SLC'
+					FROM AUTHOR AU WHERE AU.EDITORID = @editorid
+	UPDATE @AUTHORS
+	SET SLC = 0 WHERE SLC IS NULL
+	SELECT * FROM @AUTHORS	
+COMMIT TRAN
+GO
+
+EXEC USP_getAllEditors @adminid = 'AD342720'
+EXEC USP_getAuthorFromEditor @editorid = 'ED949502'
+
+----------------------------13----------------------------
+---------------------------Cal Pair Unpair Story-------------------------
+DROP PROC IF EXISTS countStory 
+GO
+
+create 
+--alter 
+proc countStory
+	@authorid char(10)
+as
+begin
+	if not exists (select AUTHORID from AUTHOR where AUTHORID = @authorid)
+	begin
+		SELECT 'AUTHOR NOT EXISTS' ERROR
+		return 0
+	end
+	declare @story int = 0, @chap int = 0
+	select @story = ISNULL(COUNT(STORYID),0), @chap = ISNULL(sum(NUMOFCHAPS),0) from STORY where AUTHORID = @authorid	
+	declare @earn float = 0, @unpair float = 0
+	select @earn = @earn + sum(GIA), @unpair = @unpair + sum(UNPAIR)  from CHAPTER where AUTHORID = @authorid 
+	select @earn = @earn + sum(GIA), @unpair = @unpair + sum(UNPAIR)  from DRAFT where AUTHORID = @authorid 
+	select @earn = @earn + sum(GIA), @unpair = @unpair + sum(UNPAIR)  from OUTLINE where AUTHORID = @authorid 
+	select @story numstory, @chap numchap, @earn earn, (@earn - @unpair) as 'receive'
+end
+go
+
+DROP PROC IF EXISTS storydatalist 
+GO
+
+create 
+--alter
+proc storydatalist
+	@authorid char(10)
+as
+begin
+	if not exists (select STORYID from STORY where AUTHORID = @authorid)
+	begin
+		SELECT 'AUTHOR HAS NO STORY ' ERROR
+		return 0
+	end
+
+	select STORYID storyid, STORYNAME name, AVATAR avt,
+	STATE process, NUMOFCHAPS approve from STORY
+	where AUTHORID = @authorid
+	
+end
+
+DROP PROC IF EXISTS calPairUnpairStory 
+GO
+
+create 
+--alter
+proc calPairUnpairStory
+	@storyid char(10)
+as
+begin
+	declare @gia float = 0, @unpair float = 0
+	select @gia = @gia + ISNULL(SUM(GIA), 0 ), @unpair = @unpair + ISNULL(SUM(UNPAIR), 0 ) from CHAPTER where STORYID = @storyid
+	select @gia = @gia + ISNULL(SUM(GIA), 0 ), @unpair = @unpair + ISNULL(SUM(UNPAIR), 0 ) from OUTLINE where STORYID = @storyid
+	select @gia = @gia + ISNULL(SUM(GIA), 0 ), @unpair = @unpair + ISNULL(SUM(UNPAIR), 0 ) from DRAFT where STORYID = @storyid
+	select @unpair unpaid, (@gia - @unpair) paid
+end
+
+
+--EXEC USP_getAuthorFromEditor @editorid = 'ED949502'
+--EXEC countStory 'AU5492956  '
+--EXEC storydatalist 'AU5492956  '
+--EXEC calPairUnpairStory 'ST999614  '
+
+
+----------------------------14----------------------------
+--SELECT SUM(NUMOFCHAPS) FROM STORY
 --SELECT * FROM STORY
+--SELECT * FROM OUTLINE
+--SELECT * FROM DRAFT
+--SELECT * FROM CHAPTER
+DROP PROC IF EXISTS USP_getAllStories
+GO
+
+CREATE 
+--ALTER 
+PROC USP_getAllStories
+	@adminid CHAR(10)
+AS
+BEGIN
+	IF NOT EXISTS (SELECT AUTHORID FROM AUTHOR  WHERE ADMINID = @adminid)
+		BEGIN
+			SELECT 'ADMIN HAS NO AUTHOR' ERROR
+			RETURN 0
+		END
+
+	DECLARE @LIST TABLE(ID CHAR(15))
+	INSERT @LIST SELECT AUTHORID FROM AUTHOR  WHERE ADMINID = @adminid
+
+	IF NOT EXISTS (SELECT S.STORYID	FROM STORY S WHERE S.AUTHORID IN (SELECT * FROM @LIST))
+		BEGIN
+			SELECT 'AUTHORS HAS NO STORY ' ERROR
+			RETURN 0
+		END
+
+	SELECT S.STORYID, S.STORYNAME, S.NUMOFCHAPS, S.AVATAR, 'Chapters' AS 'PROCESS'
+	FROM STORY S WHERE S.AUTHORID IN (SELECT * FROM @LIST)
+END 
+GO
+
+
+
+
