@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'
 
 const OverviewAuthor = ({avt, name, chapter, story, paid_stt}) => {
     const navigate = useNavigate()
-    // console.log('avtrr', '../../../assets/' + avt)
-    var avatarAuthor = require('../../../assets/avatar_vio_1.jpg')
+
+    let avatarAuthor = require("../../../assets/avatar_vio_1.jpg")
 
   return (
     <div className='flex items-center w-full bg-white px-20 py-[20px] border-t-2 border-[#DFE0EB] my-2' onClick={()=>navigate('/author/detail')}>

@@ -1,22 +1,22 @@
-import { no_god } from "../../../assets";
-import { eren } from "../../../assets";
+// import { no_god } from "../../../assets";
+// import { eren } from "../../../assets";
 
 
 
-const authorid = localStorage.getItem("authorid");
+const editorid = localStorage.getItem("editorid");
 let storydatalist = []
 async function connectfetch(){
-    let url = "http://localhost:8080/author/storydatalist/"
-    url = url + authorid 
+    let url = "http://localhost:8080/editor/storydatalist/"
+    url = url + editorid 
     const response = await fetch(url);
     const data = await response.json();
     
-    if(Object.keys(data[0]) == 'ERROR'){
+    if(Object.keys(data[0]) === 'ERROR'){
         alert("ERROR: " + data[0].ERROR)
     }
     else{ 
         for(let i = 0; i<data.length; i++){
-            let url_cal ="http://localhost:8080/author/calPairUnpairStory/"
+            let url_cal ="http://localhost:8080/editor/calPairUnpairStory/"
             url_cal = url_cal + data[i].storyid
             const response_cal = await fetch(url_cal);
             const data_cal = await response_cal.json();
@@ -28,14 +28,14 @@ async function connectfetch(){
 }
 connectfetch()
 
-export {storydatalist }
+export { storydatalist }
 
 // export const storydatalist = [
 //     {
 //         name:'Chú bé chăn cừu',
 //         avt: no_god,
 //         process: 'Chapters',
-//         approve: '10',
+//         approve: '10', //APRROVE MEANS NUMOFCHAPS :))
 //         unpaid: '100',
 //         paid: '400',
 //     },

@@ -26,7 +26,6 @@ async function connectfetch(){
         dataeditor.numchap = data[0].numchap;
         dataeditor.earn = data[0].earn.toFixed(2);
         dataeditor.receive = data[0].receive.toFixed(2);
-        console.log("data overview", data[0])
     }
 }
 

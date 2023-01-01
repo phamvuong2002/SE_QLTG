@@ -1,0 +1,1 @@
+exec [dbo].[getAllChaptersofStory] @storyid

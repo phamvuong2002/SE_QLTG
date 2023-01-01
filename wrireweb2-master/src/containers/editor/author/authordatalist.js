@@ -1,9 +1,9 @@
-import { eren } from "../../../assets";
+// import { eren } from "../../../assets";
 
 const editorid = localStorage.getItem("editorid");
 let authordatalist = []
 async function connectfetch(){
-    let url = "http://localhost:8080/editor/storydatalist/"
+    let url = "http://localhost:8080/editor/overviewAuthorList/"
     url = url + editorid 
     const response = await fetch(url);
     const data = await response.json();
@@ -12,11 +12,12 @@ async function connectfetch(){
     }
     else{ 
         authordatalist.push(data)
+        // authordatalist = data
     }
 }
-
+console.log("t",authordatalist)
 connectfetch()
-console.log(authordatalist)
+console.log("s",authordatalist)
 export { authordatalist } 
 // export const authordatalist = [
 //     {
