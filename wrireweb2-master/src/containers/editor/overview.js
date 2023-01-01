@@ -3,8 +3,10 @@ import React from 'react'
 let url = "http://localhost:8080/editor/countstory/"
 
 
-const editorid = 'ED841430' // get from login page
+const editorid = 'ED841430'; // get from login page
 localStorage.setItem('editorid', editorid)
+const PersonName = 'Aoyama Gosho'
+localStorage.setItem('editor_PersonName', PersonName)
 
 let dataeditor = {
     "numstory": "",
@@ -26,7 +28,6 @@ async function connectfetch(){
         dataeditor.numchap = data[0].numchap;
         dataeditor.earn = data[0].earn.toFixed(2);
         dataeditor.receive = data[0].receive.toFixed(2);
-        console.log("data overview", data[0])
     }
 }
 
