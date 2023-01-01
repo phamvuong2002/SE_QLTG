@@ -5,7 +5,7 @@ const OverviewAccList = ({accData}) => {
   return (
     <div className='py-1'>
         {accData.map((data) => (
-        <OverviewAcc key={data.id} avt={data.avt} name={data.name} type={data.type}/>
+        <OverviewAcc key={data.id} accid={data.accid} avt={data.avt} name={data.name} type={data.type}/>
       ))}
     </div>
   )

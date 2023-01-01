@@ -1,6 +1,3 @@
-import { Outlet } from 'react-router-dom'
-import React from 'react'
-import OverviewAcc from './account/overviewAcc'
 import OverviewAccList from './account/overviewAccList'
 import { accdatalist } from './account/accdatalist'
 

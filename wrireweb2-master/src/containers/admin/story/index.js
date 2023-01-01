@@ -1,6 +1,6 @@
 export {default as OverviewStory} from './overviewStory';
 export {default as OverviewStoryList} from './overviewStoryList';
-export {default as storydatalist} from './storydatalist';
+// export {default as storydatalist} from './storydatalist';
 export {default as DetailStory_ed} from './detailStory';
 
 export {default as chapterdatalist} from './chapterdatalist';

@@ -1,17 +1,18 @@
-import React from 'react'
-import OverviewEditor from './overviewEditor'
+import React from 'react';
+import OverviewEditor from './overviewEditor';
 
 const OverviewEditorList = ({authorData}) => {
   return (
     <div className='py-1'>
          {authorData.map((data) => (
         <OverviewEditor 
-        key={data.id} 
+        key={data.id}
+        editorid={data.editorid} 
         avt={data.avt} 
         name={data.name} 
-        pen_name={data.pen_name}
-        story={data.story}
-        chapter={data.chapter}/>
+        penname={data.penname}
+        author={data.author}
+        story={data.story}/>
       ))}
     </div>
   )

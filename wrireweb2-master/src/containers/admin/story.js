@@ -1,20 +1,11 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import React from 'react'
-
+// import React from 'react'
 import OverviewStoryList from './story/overviewStoryList'
 
 import { storydatalist } from './story/storydatalist'
 
-
-
 const Story = () => {
-
-  const navigate = useNavigate()
-
   return (
-        
-
-<div className='flex-col w-fit h-fit bg-[#F7F8FC] ml-[70px]'>
+  <div className='flex-col w-fit h-fit bg-[#F7F8FC] ml-[70px]'>
       
       <div className='bg-[#ffffff] w-[1122px] h-fit shadow-2xl rounded-lg border border-[#DFE0EB] '>
         
@@ -29,9 +20,9 @@ const Story = () => {
           <div className='ml-[255px]'>
             Process
           </div>
-          <div className='pl-[185px]'>
+          {/* <div className='pl-[185px]'>
             Unpain/ Paid
-          </div>
+          </div> */}
         </div>
 
         <div className=' items-center'>
