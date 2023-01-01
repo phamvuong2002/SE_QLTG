@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 const OverviewStory = ({avt, name, process, approve, unpaid, paid}) => {
 
   const navigate = useNavigate()
-
+  
   return (
     <div className='flex items-center w-full bg-white px-20 py-[20px] border-t-2 border-[#DFE0EB] my-2' onClick={() => navigate('/story/detail')}>
         {/* avt */}

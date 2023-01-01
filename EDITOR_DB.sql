@@ -21,7 +21,7 @@ GO
 exec editorcountStory 'ED841430  '
 
 
-
+--Author List
 create 
 --alter
 proc selectAuthorList
@@ -34,18 +34,17 @@ begin
 		return 0
 	end
 	
-	select distinct AUTHORNAME as name, A.AVATAR as avt,count(STORYID) as story, sum(NUMOFCHAPS) as chapter
+	select distinct AUTHORNAME as name, A.AUTHORID as authorid, A.AVATAR as avt,count(STORYID) as story, sum(NUMOFCHAPS) as chapter
 	from STORY S join AUTHOR A ON S.AUTHORID = A.AUTHORID
 	where A.EDITORID = @editorid
-	group by AUTHORNAME, A.AVATAR
+	group by AUTHORNAME, A.AUTHORID,A.AVATAR
 
 end
 go
 exec selectAuthorList 'ED841430  '
 
 
-select * from STORY
------------------------------storydatalist-------------------
+-------storydatalist find by Editor ID-------------------
 create 
 --alter
 proc editor_storydatalist
@@ -86,7 +85,7 @@ SELECT * FROM CHAPTER WHERE STORYID = 'ST690542  '
 SELECT * FROM DRAFT WHERE STORYID = 'ST811858  '
 SELECT * FROM OUTLINE WHERE STORYID = 'ST811858  '
 select * from story where STORYID = 'ST811858  '
-exec calPairUnpairStory 'ST044251  '
+exec calPairUnpairStory 'ST711850  '
 
 
 CREATE
@@ -114,3 +113,27 @@ GO
 exec getAllChaptersofStory 'ST690542  '
 
 
+
+-------storydatalist find by Author ID-----
+create 
+--alter
+proc author_storydatalist
+	@authorid char(10)
+as
+begin
+	if not exists (select STORYID from STORY where AUTHORID = @authorid)
+	begin
+		SELECT 'AUTHOR HAS NO STORY! ' AS ERROR
+		return 0
+	end
+
+	select STORYID AS storyid, STORYNAME AS name, AVATAR AS avt,
+	STATE AS process, NUMOFCHAPS AS approve from STORY
+	where AUTHORID = @authorid
+	
+end
+GO
+
+exec author_storydatalist 'AU3639829'
+AU3639829 
+AU4134982 

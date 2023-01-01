@@ -1,12 +1,7 @@
-// import { no_god } from "../../../assets";
-// import { eren } from "../../../assets";
-
-
-
 const editorid = localStorage.getItem("editorid");
 let storydatalist = []
 async function connectfetch(){
-    let url = "http://localhost:8080/editor/storydatalist/"
+    let url = "http://localhost:8080/editor/storydatalist/storytab/"
     url = url + editorid 
     const response = await fetch(url);
     const data = await response.json();
