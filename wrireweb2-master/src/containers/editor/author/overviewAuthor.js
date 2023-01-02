@@ -5,6 +5,7 @@ const OverviewAuthor = ({authorid, avt, name, chapter, story, paid_stt}) => {
     const navigate = useNavigate()
     async function click_(){
         localStorage.setItem('editor_authorid',authorid)
+        localStorage.setItem('editor_authorname',name)
         navigate('/author/detail')
         // window.location.reload()
     }

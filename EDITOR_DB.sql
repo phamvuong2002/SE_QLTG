@@ -57,9 +57,10 @@ begin
 		return 0
 	end
 
-	select STORYID AS storyid, STORYNAME AS name, AVATAR AS avt,
-	STATE AS process, NUMOFCHAPS AS approve from STORY
-	where EDITORID = @editorid
+	select STORYID AS storyid, STORYNAME AS name, S.AVATAR AS avt,
+	STATE AS process, NUMOFCHAPS AS approve, AUTHORNAME as authorname from STORY S
+	join AUTHOR A on A.AUTHORID = S.AUTHORID
+	where S.EDITORID = @editorid
 	
 end
 GO

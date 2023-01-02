@@ -12,7 +12,7 @@ import Write from './read'
 
 let chapterdatalist = []
 
-const authorname = localStorage.getItem('editor_PersonName')
+const authorname = localStorage.getItem('editor_authorname')
 const storyid = localStorage.getItem('editor_storyid')
 const avt = localStorage.getItem('editor_avt')
 const name = localStorage.getItem('editor_name')

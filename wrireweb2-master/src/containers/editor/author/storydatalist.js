@@ -1,5 +1,5 @@
 const authorid = localStorage.getItem("editor_authorid");
-console.log('haha',authorid);
+// console.log('haha',authorid);
 let storydatalist = []
 async function connectfetch(){
     let url = "http://localhost:8080/editor/storydatalist/authortab/"
