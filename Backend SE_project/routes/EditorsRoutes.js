@@ -7,7 +7,10 @@ const router = express.Router();
 
 router.get('/countstory/:id', EditorsControll.countStory);
 router.get('/overviewAuthorList/:id', EditorsControll.overviewAuthorList);
-router.get('/storydatalist/:id', EditorsControll.storyDataList);
+
+router.get('/storydatalist/storytab/:id', EditorsControll.editor_storyDataList);
+router.get('/storydatalist/authortab/:id', EditorsControll.author_storyDataList);
+
 router.get('/calpairunpairstory/:id', EditorsControll.calPairUnpairStory);
 router.get('/getallchapterofstory/:id', EditorsControll.getAllChaptersofStory);
 

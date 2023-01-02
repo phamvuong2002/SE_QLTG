@@ -23,10 +23,20 @@ const overviewAuthorList = async (req, res, next) => {
     }
 }
 
-const storyDataList = async (req, res, next) => {
+const editor_storyDataList = async (req, res, next) => {
     try {
         const editorid = req.params.id;
-        const list = await EditorsData.storyDataList(editorid);
+        const list = await EditorsData.editor_storyDataList(editorid);
+        res.send(list);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+
+const author_storyDataList = async (req, res, next) => {
+    try {
+        const editorid = req.params.id;
+        const list = await EditorsData.author_storyDataList(editorid);
         res.send(list);
     } catch (error) {
         res.status(400).send(error.message);
@@ -53,5 +63,7 @@ const getAllChaptersofStory = async (req, res, next) => {
     }
 }
 module.exports = {
-    countStory, overviewAuthorList, storyDataList, calPairUnpairStory, getAllChaptersofStory
+    countStory, overviewAuthorList, 
+    editor_storyDataList, author_storyDataList,
+    calPairUnpairStory, getAllChaptersofStory
 }

@@ -1,13 +1,19 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const OverviewAuthor = ({avt, name, chapter, story, paid_stt}) => {
+const OverviewAuthor = ({authorid, avt, name, chapter, story, paid_stt}) => {
     const navigate = useNavigate()
+    async function click_(){
+        localStorage.setItem('editor_authorid',authorid)
+        localStorage.setItem('editor_authorname',name)
+        navigate('/author/detail')
+        // window.location.reload()
+    }
 
     let avatarAuthor = require("../../../assets/avatar_vio_1.jpg")
 
   return (
-    <div className='flex items-center w-full bg-white px-20 py-[20px] border-t-2 border-[#DFE0EB] my-2' onClick={()=>navigate('/author/detail')}>
+    <div className='flex items-center w-full bg-white px-20 py-[20px] border-t-2 border-[#DFE0EB] my-2' onClick={()=>click_()}>
         {/* avt */}
         <div className=''>
            <img src={avatarAuthor} alt='avt' className='rounded-full w-[44px] h-[44px] '/>

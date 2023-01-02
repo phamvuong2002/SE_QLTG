@@ -29,13 +29,26 @@ const overviewAuthorList = async(EditorId) => {
     }
 }
 
-const storyDataList = async(EditorId) => {
+const editor_storyDataList = async(EditorId) => {
     try {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await utils.loadSqlQueries('editors');
         const list = await pool.request()
                             .input('editorid', sql.Char(10), EditorId)
-                            .query(sqlQueries.storydatalist);
+                            .query(sqlQueries.editor_storydatalist);
+        return list.recordset;
+    } catch (error) {
+        return error.message;
+    }
+}
+
+const author_storyDataList = async(EditorId) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await utils.loadSqlQueries('editors');
+        const list = await pool.request()
+                            .input('authorid', sql.Char(10), EditorId)
+                            .query(sqlQueries.author_storydatalist);
         return list.recordset;
     } catch (error) {
         return error.message;
@@ -69,5 +82,7 @@ const getAllChaptersofStory = async(EditorId) => {
 }
 
 module.exports = {
-    countStory, overviewAuthorList, storyDataList, calPairUnpairStory, getAllChaptersofStory
+    countStory, overviewAuthorList, 
+    editor_storyDataList, author_storyDataList, 
+    calPairUnpairStory, getAllChaptersofStory
 }
