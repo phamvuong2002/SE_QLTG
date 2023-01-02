@@ -68,6 +68,45 @@ const getAllStories = async (adminid) => {
     }
 }
 
+const getAuthorsFromEditor = async (editorid) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await utils.loadSqlQueries('admins');
+        const editorAuthorList = await pool.request()
+                            .input('editorid', sql.Char(10), editorid)
+                            .query(sqlQueries.getAuthorFromEditor);
+        return editorAuthorList.recordset;
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const storyDatalist = async(AuthorID) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await utils.loadSqlQueries('admins');
+        const list = await pool.request()
+                            .input('authorid', sql.Char(10), AuthorID)
+                            .query(sqlQueries.storyDataList);
+        return list.recordset;
+    } catch (error) {
+        return error.message;
+    }
+}
+
+const calPaidUnpaidStory = async(StoryID) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await utils.loadSqlQueries('admins');
+        const value = await pool.request()
+                            .input('storyid', sql.Char(10), StoryID)
+                            .query(sqlQueries.calPaidUnpaidStory);
+        return value.recordset;
+    } catch (error) {
+        return error.message;
+    }
+}
+
 const createAdmin = async (data) => {
     try {
         let pool = await sql.connect(config.sql);
@@ -114,68 +153,7 @@ const createEditor = async (data) => {
         return error.message;
     }
 }
-
-// const updateAdmin = async (adminid, data) => {
-//     try {
-//         let pool = await sql.connect(config.sql);
-//         const sqlQueries = await utils.loadSqlQueries('admins');
-//         const update = await pool.request()
-//                             .input('adminid', sql.Char(10), adminid)
-//                             .input('adminid', sql.Char(10), data.adminid)
-//                             .input('editorid', sql.Char(10), data.editorid)
-//                             .input('password', sql.Char(15), data.password)
-//                             .input('adminname', sql.Char(20), data.adminname)
-//                             .input('email', sql.Char(30), data.email)
-//                             .input('address', sql.Char(30), data.address)
-//                             .input('phonenumber', sql.Char(15), data.phonenumber)
-//                             .input('accountnumber', sql.Char(15), data.accountnumber)
-//                             .input('salary', sql.Int, data.salary)
-//                             .input('unpair', sql.Int, data.unpair)
-//                         .query(sqlQueries.updateadmin);
-//         return update.recordset;
-//     } catch (error) {
-//         return error.message;
-//     }
-// }
-
-const deleteAdmin = async (adminid) => {
-    try {
-        let pool = await sql.connect(config.sql);
-        const sqlQueries = await utils.loadSqlQueries('admins');
-        const delete_ = await pool.request()
-                            .input('adminid', sql.Char(10), adminid)
-                            .query(sqlQueries.deleteadmin);
-        return delete_.recordset;
-    } catch (error) {
-        return error.message;
-    }
-}
-
-const deleteAuthor = async (authorid) => {
-    try {
-        let pool = await sql.connect(config.sql);
-        const sqlQueries = await utils.loadSqlQueries('admins');
-        const delete_ = await pool.request()
-                            .input('authorid', sql.Char(10), authorid)
-                            .query(sqlQueries.deleteadmin);
-        return delete_.recordset;
-    } catch (error) {
-        return error.message;
-    }
-}
-
-const deleteEditor = async (editorid) => {
-    try {
-        let pool = await sql.connect(config.sql);
-        const sqlQueries = await utils.loadSqlQueries('admins');
-        const delete_ = await pool.request()
-                            .input('editorid', sql.Char(10), editorid)
-                            .query(sqlQueries.deleteadmin);
-        return delete_.recordset;
-    } catch (error) {
-        return error.message;
-    }
-}
 module.exports = {
-    getAdminOverview, getAllAccounts, getAllAuthors, getAllEditors, getAllStories, createAdmin, createAuthor, createEditor, deleteAdmin, deleteAuthor, deleteEditor
+    getAdminOverview, getAllAccounts, getAllAuthors, getAllEditors, getAllStories, createAdmin, createAuthor, createEditor, 
+    getAuthorsFromEditor, calPaidUnpaidStory, storyDatalist
 }

@@ -52,6 +52,36 @@ const get_all_stories = async (req, res, next) => {
     }
 }
 
+const get_Authors_From_Editor = async (req, res, next) => {
+    try {
+        const editorid = req.params.id;
+        const authorslist = await AdminsData.getAuthorsFromEditor(editorid);
+        res.send(authorslist);        
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+
+const story_Data_List = async (req, res, next) => {
+    try {
+        const authorid = req.params.id;
+        const list = await AdminsData.storyDatalist(authorid);
+        res.send(list);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+
+const cal_Paid_Unpaid_Story = async (req, res, next) => {
+    try {
+        const storyid = req.params.id;
+        const value = await AdminsData.calPaidUnpaidStory(storyid);
+        res.send(value);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+
 const create_Admin = async (req, res, next) => {
     try {
         const data = req.body;
@@ -82,47 +112,7 @@ const create_Editor = async (req, res, next) => {
     }
 }
 
-// const update_Admin = async (req, res, next) => {
-//     try {
-//         const adminid =  req.params.id;
-//         const data = req.body;
-//         const updated = await AdminsData.updateAdmin(adminid, data);
-//         res.send(updated);
-//     } catch (error) {
-//         res.status(400).send(error.message);
-//     }
-// }
-
-const delete_Admin = async (req, res, next) => {
-    try {
-        const adminid = req.params.id;
-        const deleted = await AdminsData.deleteAdmin(adminid);
-        res.send(deleted);
-    } catch (error) {
-        res.status(400).send(error.message);
-    }
-}
-
-const delete_Author = async (req, res, next) => {
-    try {
-        const authorid = req.params.id;
-        const deleted = await AdminsData.deleteAuthor(authorid);
-        res.send(deleted);
-    } catch (error) {
-        res.status(400).send(error.message);
-    }
-}
-
-const delete_Editor = async (req, res, next) => {
-    try {
-        const editorid = req.params.id;
-        const deleted = await AdminsData.deleteEditor(editorid);
-        res.send(deleted);
-    } catch (error) {
-        res.status(400).send(error.message);
-    }
-}
-
 module.exports = {
-    admin_overview, get_all_accounts, get_all_authors, get_all_editors, get_all_stories, create_Admin, create_Author, create_Editor, delete_Admin, delete_Author, delete_Editor
+    admin_overview, get_all_accounts, get_all_authors, get_all_editors, get_all_stories, create_Admin, create_Author, create_Editor, 
+    get_Authors_From_Editor, cal_Paid_Unpaid_Story, story_Data_List
 }

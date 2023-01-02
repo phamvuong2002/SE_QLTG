@@ -1,5 +1,3 @@
-import { eren } from "../../../assets";
-
 let editordatalist = [];
 const adminid = JSON.parse(localStorage.getItem('adminid'));
 
@@ -13,7 +11,7 @@ const GetEditors = () => {
           editordatalist.push({"avt": actualData[i].AVATAR, "editorid": actualData[i].EDITORID, "name": actualData[i].EDITORNAME, "penname": actualData[i].PENNAME, "author": actualData[i].SLTG, "story": actualData[i].SLT});
         }
     });
-  console.log("editor:", editordatalist);
+  // console.log("editor:", editordatalist);
 };
 
 GetEditors();

@@ -13,7 +13,7 @@ const GetAuthors = () => {
           authordatalist.push({"avt": actualData[i].AVATAR, "authorid": actualData[i].AUTHORID, "name": actualData[i].AUTHORNAME, "penname": actualData[i].PENNAME, "chapter": actualData[i].SLC, "story": actualData[i].SLT});
         }
     });
-  console.log("editor:", authordatalist);
+  // console.log("authordatalist:", authordatalist);
 };
 
 GetAuthors();

@@ -14,7 +14,7 @@ const GetAccounts = () => {
           accdatalist.push({"avt": actualData[i].AVATAR, "accid": actualData[i].ID, "name": actualData[i].NAME, "type": actualData[i].TYPE});
         }
     });
-  console.log("acc:", accdatalist);
+  // console.log("acc:", accdatalist);
 };
 
 GetAccounts();

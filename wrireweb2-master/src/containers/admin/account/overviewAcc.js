@@ -1,7 +1,7 @@
 import React from 'react';
 import { eren } from '../../../assets';
 
-const OverviewAcc = ({id, avt, name, type}) => {    
+const OverviewAcc = ({accid, avt, name, type}) => {    
   return (
     <div className='flex items-center w-full bg-white px-20 py-[20px] border-t-2 border-[#DFE0EB] my-2'>
         {/* avt */}

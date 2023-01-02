@@ -1,26 +1,34 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 // import { eren } from '../../../assets';
-import { meo1 } from '../../../assets';
 // const ad_author = JSON.parse(localStorage.getItem('ad_author') || '[]');
 // import avt from '../../../assets/avatar_vio_18.jpg';
 
-const AllAuthorWork = () => {
+const AllAuthorWork = ({storyid, avt, name, process, unpaid, paid, numofchaps}) => {
+    const navigate = useNavigate();
+    const ad_author = JSON.parse(localStorage.getItem('ad_author') || '[]');
+    const HandleClick = () => {
+        var ad_story = {"storyid": storyid, "name": name, "avt": avt, "paid": paid, "unpaid": unpaid, "authorid": ad_author.authorid, "authorname": ad_author.name};
+        console.log(ad_story);
+        localStorage.setItem('ad_story', JSON.stringify(ad_story));
+        navigate('/story/detail');
+        // window.location.href='/story/detail';
+      };
     return(
-        <div className='flex'>
+        <div className='flex' onClick={HandleClick}>
             <div className='text-[#9FA2B4] ml-[20px] mt-[10px] font-bold text-sm w-[50px] h-[50px]'>
-                <img src={meo1} alt='Hinh'></img>
+                <img src={'/' + avt} alt='Hinh'></img>
             </div>
             <div className='text-[#252733] ml-[8px] mt-[13px] font-bold text-sm'>
-                <p className=''>Chú bé chăn cừu</p>
-                <div className='text-[#C5C7CD] text-[10px]'>
+                <p className=''>{name}</p>
+                {/* <div className='text-[#C5C7CD] text-[10px]'>
                     <p className=''>Update 1 day ago</p>
-                </div>
+                </div> */}
             </div>
             <div className='mt-[10px] ml-[148px] font-bold text-sm text-[#252733]'>
                 <p>Chapters</p>
                 <div className='text-[#C5C7CD] text-[10px]'>
-                    <p className=''>Chap 10</p>
+                    <p className=''>Chap {numofchaps}</p>
                 </div>
             </div>
             {/* <div className='mt-[10px] ml-[100px] font-bold text-sm text-[#252733]'>
@@ -30,27 +38,50 @@ const AllAuthorWork = () => {
                 </div>
             </div> */}
             <div className='mt-[8px] ml-[170px] font-bold text-sm text-[#C61C1C]'>
-                <p>0$</p>
+                <p>{unpaid}$</p>
                 <div className='text-[#35C655] text-sm font-bold'>
-                    <p className=''>550$</p>
+                    <p className=''>{paid}$</p>
                 </div>
             </div>
             <div className='mt-[13px] ml-[130px] font-bold text-sm text-[#C61C1C]'>
                 <div className='w-[102px] h-[24px] bg-[#A5A6F6] text-center pt-0.5 text-[#ffffff] rounded-full'>
-                    <p>ON-GOING</p>
+                    <p>{process}</p>
                 </div>
             </div>
         </div>
     )
 };
 
+const OverviewAuthorStoryList = ({authorstorylist}) => {
+    return (
+      <div className='py-1'>
+        {authorstorylist.map((data) => (
+            <AllAuthorWork
+            storyid={data.storyid}
+            avt={data.avt}
+            name={data.name}
+            process={data.process}
+            unpaid={data.unpaid}
+            paid={data.paid}
+            numofchaps={data.numofchaps} 
+            />
+        ))}
+      </div>
+    )
+}
 
 const Detail_Author_ad = () => {
-    const navigate = useNavigate();
     const ad_author = JSON.parse(localStorage.getItem('ad_author') || '[]');
-    console.log('../../../assets/' + ad_author.avt);
-    // localStorage.removeItem('ad_author');
-    console.log("ad_author:", ad_author.avt);
+    console.log("ad_author1:", ad_author.authorid);
+    let authorstorylist = JSON.parse(localStorage.getItem('authorstorylist'));
+    var unpaid = 0;
+    var paid = 0;
+    for(let i = 0; i < authorstorylist.length; i++){
+        unpaid += parseFloat(authorstorylist[i].unpaid);
+        paid += parseFloat(authorstorylist[i].paid);
+    }
+    console.log(unpaid, paid);
+    console.log('authorstorylist2:', authorstorylist);
     return (
         <div className='flex-col shadow-2xl w-[1020px] h-[537px] border rounded-lg bg-[#F7F8FC] ml-[70px]'>   
             <div className='flex pl-10 pt-5'>
@@ -66,7 +97,7 @@ const Detail_Author_ad = () => {
                             Unpaid
                         </p>
                         <p className='text-center pt-3 text-4xl text-bold text-[#D0AB4C]'>
-                            200$
+                            {unpaid}$
                         </p>
                     </div>
                     <div className='w-[227px] h-[134px] bg-[#ffffff] shadow-2xl rounded-lg border border-[#3751FF] ml-[40px]' >
@@ -74,7 +105,7 @@ const Detail_Author_ad = () => {
                             Paid
                         </p>
                         <p className='text-center pt-3 text-4xl text-bold text-[#3751FF]'>
-                            2000$
+                            {paid}$
                         </p>
                     </div>
                 </div>
@@ -90,7 +121,7 @@ const Detail_Author_ad = () => {
                 <div className='text-[#252733] text-xl font-bold ml-[20px] mt-[20px]'>
                     <h1>All Work</h1>
                 </div>
-                <div onClick={()=>navigate('/story/detail')}>
+                <div>
                     <div className='flex pb-3'>
                         <div className='text-[#9FA2B4] ml-[20px] mt-[20px] font-bold text-sm'>
                             <p>Story</p>
@@ -110,7 +141,9 @@ const Detail_Author_ad = () => {
                     </div>
                     <hr></hr>
                     
-                    <AllAuthorWork></AllAuthorWork>
+                    <div className=' items-center'>
+                        <OverviewAuthorStoryList authorstorylist={authorstorylist}/>
+                    </div>
                     
                 </div>
             </div>

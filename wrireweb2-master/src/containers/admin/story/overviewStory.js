@@ -2,14 +2,14 @@ import React from 'react';
 // import { no_god } from '../../../assets'
 import { useNavigate } from 'react-router-dom';
 
-const OverviewStory = ({storyid, avt, name, Process, approve/*, unpaid, paid*/}) => {
+const OverviewStory = ({key, storyid, avt, name, Process, approve/*, unpaid, paid*/}) => {
   localStorage.removeItem('admin_storyid');
-  console.log("admin_storyid1:", JSON.parse(localStorage.getItem('admin_storyid')));
+//   console.log("admin_storyid1:", JSON.parse(localStorage.getItem('admin_storyid')));
   const navigate = useNavigate();  
   const HandleClick = () => {
     // console.log(storyid);
     localStorage.setItem('admin_storyid', JSON.stringify(storyid));
-    console.log("admin_storyid2:", JSON.parse(localStorage.getItem('admin_storyid')));
+    // console.log("admin_storyid2:", JSON.parse(localStorage.getItem('admin_storyid')));
     navigate('/story/detail');
     // window.location.href='/story/detail';
   };

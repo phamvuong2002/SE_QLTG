@@ -1,16 +1,43 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+async function GetAuthorStoryList(id){
+    console.log("id:", id);
+    // window.location.reload();
+    let authorstorylist = [];
+    let url = `http://localhost:8080/admin/storyDataList/${id}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    if(Object.keys(data[0]) == 'ERROR'){
+        alert("ERROR: " + data[0].ERROR);
+    }
+    else{ 
+        for(let i = 0; i<data.length; i++){
+            let url_cal = "http://localhost:8080/admin/calPaidUnpaidStory/";
+            url_cal = url_cal + data[i].storyid;
+            const response_cal = await fetch(url_cal);
+            const data_cal = await response_cal.json();
+            data[i]["unpaid"] = data_cal[0].unpaid.toFixed(2);
+            data[i]["paid"] = data_cal[0].paid.toFixed(2);
+        }
+        authorstorylist = data;
+        localStorage.setItem('authorstorylist', JSON.stringify(authorstorylist));
+        console.log('authorstorylist1:', JSON.parse(localStorage.getItem('authorstorylist')));
+    }
+}
+
 const OverviewAuthor = ({authorid, avt, name, penname, chapter, story/*, paid_stt*/}) => {
   const navigate = useNavigate();
-  localStorage.removeItem('ad_author');
   
   const HandleClick = () => {
     // console.log(storyid);
     var ad_author = {"authorid": authorid, "name": name, "avt": avt};
+    console.log("ad_author0:", ad_author.authorid);
     localStorage.setItem('ad_author', JSON.stringify(ad_author));
-    navigate('/author/detail');
-    // window.location.href='/story/detail';
+    GetAuthorStoryList(authorid);
+    navigate('/author/detail', { replace: true });
+    // window.location.reload();
   };
 
   return (

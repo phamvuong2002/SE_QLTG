@@ -6,7 +6,6 @@ const OverviewStoryList = ({storyData}) => {
     <div className='py-1 overflow-y-scroll h-[500px]'>
         {storyData.map((data) => (
         <OverviewStory
-        key={data.id}
         storyid={data.storyid}
         avt={data.avt}
         name={data.name}

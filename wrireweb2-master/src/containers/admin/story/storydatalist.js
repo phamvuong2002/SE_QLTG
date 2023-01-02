@@ -14,7 +14,7 @@ const GetStories = () => {
           storydatalist.push({"avt": actualData[i].AVATAR, "storyid": actualData[i].STORYID, "name": actualData[i].STORYNAME, "process": actualData[i].PROCESS, "approve": actualData[i].NUMOFCHAPS});
         }
     });
-  console.log("story:", storydatalist);
+  // console.log("story:", storydatalist);
 };
 
 GetStories();
