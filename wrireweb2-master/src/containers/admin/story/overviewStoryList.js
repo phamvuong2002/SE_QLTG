@@ -9,10 +9,10 @@ const OverviewStoryList = ({storyData}) => {
         storyid={data.storyid}
         avt={data.avt}
         name={data.name}
-        process={data.process}
+        Process={data.process}
         approve={data.approve}
-        unpaid={data.unpaid}
-        paid={data.paid}    
+        // unpaid={data.unpaid}
+        // paid={data.paid}    
         />
         ))}
     </div>

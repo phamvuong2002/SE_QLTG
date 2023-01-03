@@ -1,0 +1,1 @@
+exec [dbo].[author_storydatalist] @authorid

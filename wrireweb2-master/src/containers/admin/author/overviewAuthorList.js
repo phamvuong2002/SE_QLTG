@@ -6,13 +6,14 @@ const OverviewAuthorList = ({authorData}) => {
     <div className='py-1'>
          {authorData.map((data) => (
         <OverviewAuthor 
-        key={data.id} 
+        authorid={data.authorid}
         avt={data.avt} 
         name={data.name} 
-        pen_name={data.pen_name}
+        penname={data.penname}
         story={data.story}
         chapter={data.chapter}
-        paid_stt={data.paid_stt}/>
+        // paid_stt={data.paid_stt}
+        />
       ))}
     </div>
   )

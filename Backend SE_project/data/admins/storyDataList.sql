@@ -1,0 +1,1 @@
+exec [dbo].[USP_storyDataList] @authorid

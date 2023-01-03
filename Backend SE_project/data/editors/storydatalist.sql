@@ -1,1 +1,0 @@
-exec [dbo].[storydatalist] @editorid

@@ -21,15 +21,15 @@ import Detail_Editor_Ad from './containers/admin/editor/detailEditor';
 import Read_ad from './containers/admin/story/read';
 
 import path from './ultis/path';
-let role = 'login'
+let role = 'admin'
 function App() { 
-  let temp = localStorage.getItem('login_role');
-  // localStorage.removeItem('login_role');
-  console.log("temp: ",temp);
-  if (temp !== null) {
-    role = temp;
-  }
-  role = 'author'
+  // let temp = localStorage.getItem('login_role');
+  // // localStorage.removeItem('login_role');
+  // console.log("temp: ",temp);
+  // if (temp !== null) {
+  //   role = temp;
+  // }
+  // role = 'admin'
   //localStorage.removeItem('login');
   return (
     <>

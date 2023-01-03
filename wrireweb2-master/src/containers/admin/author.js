@@ -1,7 +1,4 @@
 import React from 'react'
-import { Outlet } from 'react-router-dom'
-
-import OverviewAuthor from './author/overviewAuthor'
 import OverviewAuthorList from './author/overviewAuthorList'
 import { authordatalist } from './author/authordatalist'
 

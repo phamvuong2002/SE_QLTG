@@ -1,58 +1,81 @@
-import { no_god } from "../../../assets";
-import { eren } from "../../../assets";
+const editorid = localStorage.getItem("editorid");
+let storydatalist = []
+async function connectfetch(){
+    let url = "http://localhost:8080/editor/storydatalist/storytab/"
+    url = url + editorid 
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    if(Object.keys(data[0]) === 'ERROR'){
+        alert("ERROR: " + data[0].ERROR)
+    }
+    else{ 
+        for(let i = 0; i<data.length; i++){
+            let url_cal ="http://localhost:8080/editor/calPairUnpairStory/"
+            url_cal = url_cal + data[i].storyid
+            const response_cal = await fetch(url_cal);
+            const data_cal = await response_cal.json();
+            data[i]["unpaid"] = data_cal[0].unpaid.toFixed(2)
+            data[i]["paid"] = data_cal[0].paid.toFixed(2)
+        }
+        storydatalist = data
+    }
+}
+connectfetch()
 
+export { storydatalist }
 
-export const storydatalist = [
-    {
-        name:'Chú bé chăn cừu',
-        avt: no_god,
-        process: 'Chapters',
-        approve: '10',
-        unpaid: '100',
-        paid: '400',
-    },
-    {
-        name:'Cừu chăn chú bé',
-        avt: no_god,
-        process: 'Chapters',
-        approve: '10',
-        unpaid: '100',
-        paid: '400',
-    },{
-        name:'Bé sói cute',
-        avt: no_god,
-        process: 'Chapters',
-        approve: '10',
-        unpaid: '100',
-        paid: '400',
-    },{
-        name:'Hết tiền cho mẹ',
-        avt: eren,
-        process: 'Draft',
-        approve: '10',
-        unpaid: '100',
-        paid: '400',
-    },{
-        name:'Hết tiền cho mẹ',
-        avt: eren,
-        process: 'Draft',
-        approve: '10',
-        unpaid: '100',
-        paid: '400',
-    },{
-        name:'Hết tiền cho mẹ',
-        avt: eren,
-        process: 'Draft',
-        approve: '10',
-        unpaid: '100',
-        paid: '400',
-    },{
-        name:'Hết tiền cho mẹ',
-        avt: eren,
-        process: 'Draft',
-        approve: '10',
-        unpaid: '100',
-        paid: '400',
-    },
+// export const storydatalist = [
+//     {
+//         name:'Chú bé chăn cừu',
+//         avt: no_god,
+//         process: 'Chapters',
+//         approve: '10', //APRROVE MEANS NUMOFCHAPS :))
+//         unpaid: '100',
+//         paid: '400',
+//     },
+//     {
+//         name:'Cừu chăn chú bé',
+//         avt: no_god,
+//         process: 'Chapters',
+//         approve: '10',
+//         unpaid: '100',
+//         paid: '400',
+//     },{
+//         name:'Bé sói cute',
+//         avt: no_god,
+//         process: 'Chapters',
+//         approve: '10',
+//         unpaid: '100',
+//         paid: '400',
+//     },{
+//         name:'Hết tiền cho mẹ',
+//         avt: eren,
+//         process: 'Draft',
+//         approve: '10',
+//         unpaid: '100',
+//         paid: '400',
+//     },{
+//         name:'Hết tiền cho mẹ',
+//         avt: eren,
+//         process: 'Draft',
+//         approve: '10',
+//         unpaid: '100',
+//         paid: '400',
+//     },{
+//         name:'Hết tiền cho mẹ',
+//         avt: eren,
+//         process: 'Draft',
+//         approve: '10',
+//         unpaid: '100',
+//         paid: '400',
+//     },{
+//         name:'Hết tiền cho mẹ',
+//         avt: eren,
+//         process: 'Draft',
+//         approve: '10',
+//         unpaid: '100',
+//         paid: '400',
+//     },
 
-]
+// ]
