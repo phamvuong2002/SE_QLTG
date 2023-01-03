@@ -83,9 +83,20 @@ const addComment = async (req, res, next) => {
         res.status(400).send(error.message);
     }
 }
+
+const updatePayStt = async (req, res, next) => {
+    try {
+        const chapterid = req.params.id;
+        const value = await EditorsData.updatePayStt(chapterid);
+        res.send(value);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
 module.exports = {
     countStory, overviewAuthorList, 
     editor_storyDataList, author_storyDataList,
     calPairUnpairStory, getAllChaptersofStory,
-    getComment, addComment
+    getComment, addComment,
+    updatePayStt
 }

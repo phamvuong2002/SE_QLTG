@@ -4,32 +4,32 @@ import { useNavigate } from 'react-router-dom'
 
 const OverviewStory = ({storyid, avt, name, process, approve, unpaid, paid}) => {
 
-  const navigate = useNavigate()
-  async function click_(){
-    localStorage.setItem('editor_storyid',storyid)
-    localStorage.setItem('editor_avt',avt)
-    localStorage.setItem('editor_name',name)
-    localStorage.setItem('editor_unpaid',unpaid)
-    localStorage.setItem('editor_paid',paid)
-    localStorage.setItem('editor_approve',approve)
-    // get chapters
-    let url = "http://localhost:8080/editor/getallchapterofstory/"
-    url = url + storyid 
-    const response = await fetch(url);
-    const data = await response.json();
-   
-    if(Object.keys(data[0]) === 'ERROR'){
-        localStorage.setItem('editor_chapterdatalist',JSON.stringify(data)) 
-        console.log("ERROR: " + data[0].ERROR)
-    }
-    else{ 
-        localStorage.setItem('editor_chapterdatalist',JSON.stringify(data)) 
-    }
-    // await timeout(5000)
-    // to detail page
-    navigate('/story/detail')
-    //reload to update page
-    window.location.reload()
+    const navigate = useNavigate()
+    async function click_(){
+        localStorage.setItem('editor_storyid',storyid)
+        localStorage.setItem('editor_avt',avt)
+        localStorage.setItem('editor_name',name)
+        localStorage.setItem('editor_unpaid',unpaid)
+        localStorage.setItem('editor_paid',paid)
+        localStorage.setItem('editor_approve',approve)
+        // get chapters
+        let url = "http://localhost:8080/editor/getallchapterofstory/"
+        url = url + storyid 
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if(Object.keys(data[0]) === 'ERROR'){
+            localStorage.setItem('editor_chapterdatalist',JSON.stringify(data)) 
+            console.log("ERROR: " + data[0].ERROR)
+        }
+        else{ 
+            localStorage.setItem('editor_chapterdatalist',JSON.stringify(data)) 
+        }
+        // await timeout(5000)
+        // to detail page
+        navigate('/story/detail')
+        //reload to update page
+        window.location.reload()
 }
     let avatar_story = require("../../../assets/" + avt)
   return (

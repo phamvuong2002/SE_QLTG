@@ -110,9 +110,22 @@ const addComment = async(data) => {
     }
 }
 
+const updatePayStt = async(ChapterId) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await utils.loadSqlQueries('editors');
+        const list = await pool.request()
+                            .input('chapterid', sql.Char(10), ChapterId)
+                            .query(sqlQueries.updatePayStt);
+        return list.recordset;
+    } catch (error) {
+        return error.message;
+    }
+}
+
 module.exports = {
     countStory, overviewAuthorList, 
     editor_storyDataList, author_storyDataList, 
     calPairUnpairStory, getAllChaptersofStory,
-    getComment, addComment
+    getComment, addComment, updatePayStt
 }

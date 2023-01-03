@@ -128,7 +128,7 @@ proc getAllChaptersofStory
 	@storyid char(10)
 as
 begin
-	if NOT EXISTS (select NUMOFCHAPS from STORY where STORYID = @storyid)
+	if (select NUMOFCHAPS from STORY where STORYID = @storyid) = 0
 	begin
 		select 'STORY HAS NO CHAPTERS' as ERROR
 		return 0
@@ -155,7 +155,7 @@ proc showComment
 	@chapterid char(10)
 as
 begin
-	if NOT EXISTS (select * from CHAPTER where CHAPTERID = @chapterid)
+	if NOT EXISTS (select * from COMMENT where CHAPTERID = @chapterid)
 	begin
 		select 'STORY HAS NO CHAPTERS' as ERROR
 		return 0
@@ -167,7 +167,7 @@ begin
 	
 end
 GO
-exec showComment 'CH59hfs76'
+exec showComment 'CH00mcu55'
 --CH00mcu55 
 --CH59hfs76 
 --CH72qwt70 
@@ -216,18 +216,22 @@ proc addComment
 	@content ntext
 as
 begin
-	if exists(select * from COMMENT where COMMENTID = @cmtid)
+	if exists (select * from COMMENT where COMMENTID = @cmtid)
 	begin
 		select 'COMMENT HAS ALREADY EXISTS' AS ERROR
 		
 		return 0
 	end
 	
-	if not exists(select * from CHAPTER where CHAPTERID = @chapterid)
+	if not exists (select * from CHAPTER where CHAPTERID = @chapterid)
 	begin
 		select 'CHAPTER NOT EXISTS' AS ERROR
-		
 		return 0
+	end
+
+	if exists (select * from COMMENT where CHAPTERID = @chapterid)
+	begin
+		update COMMENT SET CONTENT = @content WHERE CHAPTERID = @chapterid
 	end
 
 	if not exists(select * from EDITOR where EDITORID = @editorid)
@@ -242,8 +246,30 @@ begin
 end
 go
 EXEC addComment 'CCCCC', 'CCCCC', 'CCCCC', 'CCCCCCCCCCC'
+select * from COMMENT
 
+DELETE COMMENT WHERE CONTENT like 'aaa'
+select * from chapter
 
+-----------APPROVE BUTTON (to update paid/unpaid)---------
+create 
+--alter
+proc updateUnpaidPaid
+	@chapterid char(10)
+as
+begin
+
+	update CHAPTER set UNPAIR = 0 where @chapterid = CHAPTERID
+	SELECT * FROM CHAPTER WHERE @chapterid = CHAPTERID
+	
+end
+GO
+EXEC updateUnpaidPaid 'CH00mcu55'
+--CH00mcu55 
+--CH59hfs76 
+--CH72qwt70 
+
+update CHAPTER set UNPAIR = 865.77637338836 where CHAPTERID = 'CH00mcu55 '
 
 
 

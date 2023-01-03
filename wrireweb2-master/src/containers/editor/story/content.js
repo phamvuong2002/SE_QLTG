@@ -9,7 +9,7 @@ const Content = ({detail_content}) => {
     console.log(event.target.value);
   };
   return (
-    <textarea  className='w-full h-[500px] bg-white shadow-md rounded-md mx-[200px]'
+    <textarea  className='w-[600px] h-[500px] bg-white shadow-md rounded-md ml-[200px]'
     id="message"
     name="message"
     value={message}
