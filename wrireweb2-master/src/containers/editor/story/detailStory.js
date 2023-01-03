@@ -13,6 +13,7 @@ import Write from './read'
 let chapterdatalist = []
 
 const authorname = localStorage.getItem('editor_authorname')
+const authorid = localStorage.getItem('editor_authoridd')
 const storyid = localStorage.getItem('editor_storyid')
 const avt = localStorage.getItem('editor_avt')
 const name = localStorage.getItem('editor_name')
@@ -24,15 +25,7 @@ const DetailStory_ed = () => {
     chapterdatalist = JSON.parse(localStorage.getItem('editor_chapterdatalist'))
     // console.log(chapterdatalist)
     // chapterdatalist = localStorage.getItem('chapterdatalist')
-    // const navigate = useNavigate()
-    // // function click_chapter() {
-    // //     localStorage.setItem('TYPE', 'CHAPTER')
-    // //     navigate('/story/read')
-    // // }
-    // // function click_outline() {
-    // //     localStorage.setItem('TYPE', 'OUTLINE')
-    // //     navigate('/story/read')
-    // // }
+
 
     let avatar_story = require("../../../assets/" + avt)
 

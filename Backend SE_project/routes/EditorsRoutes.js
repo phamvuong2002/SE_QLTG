@@ -14,6 +14,11 @@ router.get('/storydatalist/authortab/:id', EditorsControll.author_storyDataList)
 router.get('/calpairunpairstory/:id', EditorsControll.calPairUnpairStory);
 router.get('/getallchapterofstory/:id', EditorsControll.getAllChaptersofStory);
 
+router.get('/getcomment/:id', EditorsControll.getComment);
+router.post('/addcomment', EditorsControll.addComment);
+
+router.get('/approvebtn/:id', EditorsControll.updatePayStt);
+
 module.exports = {
     routes: router
 }

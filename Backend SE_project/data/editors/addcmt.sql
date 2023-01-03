@@ -1,0 +1,1 @@
+EXEC addComment @cmtid, @chapterid ,@editorid ,@content 

@@ -35,8 +35,8 @@ const editor_storyDataList = async (req, res, next) => {
 
 const author_storyDataList = async (req, res, next) => {
     try {
-        const editorid = req.params.id;
-        const list = await EditorsData.author_storyDataList(editorid);
+        const authorid = req.params.id;
+        const list = await EditorsData.author_storyDataList(authorid);
         res.send(list);
     } catch (error) {
         res.status(400).send(error.message);
@@ -62,8 +62,41 @@ const getAllChaptersofStory = async (req, res, next) => {
         res.status(400).send(error.message);
     }
 }
+
+const getComment = async (req, res, next) => {
+    try {
+        const chapterid = req.params.id;
+        const value = await EditorsData.getComment(chapterid);
+        res.send(value);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+
+
+const addComment = async (req, res, next) => {
+    try {
+        const data = req.body;
+        const value = await EditorsData.addComment(data);
+        res.send(value);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+
+const updatePayStt = async (req, res, next) => {
+    try {
+        const chapterid = req.params.id;
+        const value = await EditorsData.updatePayStt(chapterid);
+        res.send(value);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
 module.exports = {
     countStory, overviewAuthorList, 
     editor_storyDataList, author_storyDataList,
-    calPairUnpairStory, getAllChaptersofStory
+    calPairUnpairStory, getAllChaptersofStory,
+    getComment, addComment,
+    updatePayStt
 }

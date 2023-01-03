@@ -42,12 +42,12 @@ const editor_storyDataList = async(EditorId) => {
     }
 }
 
-const author_storyDataList = async(EditorId) => {
+const author_storyDataList = async(authorid) => {
     try {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await utils.loadSqlQueries('editors');
         const list = await pool.request()
-                            .input('authorid', sql.Char(10), EditorId)
+                            .input('authorid', sql.Char(10), authorid)
                             .query(sqlQueries.author_storydatalist);
         return list.recordset;
     } catch (error) {
@@ -68,13 +68,55 @@ const calPairUnpairStory = async(EditorId) => {
     }
 }
 
-const getAllChaptersofStory = async(EditorId) => {
+const getAllChaptersofStory = async(storyid) => {
     try {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await utils.loadSqlQueries('editors');
         const list = await pool.request()
-                            .input('storyid', sql.Char(10), EditorId)
+                            .input('storyid', sql.Char(10), storyid)
                             .query(sqlQueries.getAllChaptersofStory);
+        return list.recordset;
+    } catch (error) {
+        return error.message;
+    }
+}
+
+const getComment = async(ChapterId) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await utils.loadSqlQueries('editors');
+        const list = await pool.request()
+                            .input('chapterid', sql.Char(10), ChapterId)
+                            .query(sqlQueries.getcmt);
+        return list.recordset;
+    } catch (error) {
+        return error.message;
+    }
+}
+
+const addComment = async(data) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await utils.loadSqlQueries('editors');
+        const insert = await pool.request()
+                            .input('cmtid', sql.Char(10), data.cmtid)
+                            .input('chapterid', sql.Char(10), data.chapterid)
+                            .input('editorid', sql.Char(10), data.editorid)
+                            .input('content', sql.NText, data.content)
+                            .query(sqlQueries.addcmt);
+        return insert.recordset;
+    } catch (error) {
+        return error.message;
+    }
+}
+
+const updatePayStt = async(ChapterId) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await utils.loadSqlQueries('editors');
+        const list = await pool.request()
+                            .input('chapterid', sql.Char(10), ChapterId)
+                            .query(sqlQueries.updatePayStt);
         return list.recordset;
     } catch (error) {
         return error.message;
@@ -84,5 +126,6 @@ const getAllChaptersofStory = async(EditorId) => {
 module.exports = {
     countStory, overviewAuthorList, 
     editor_storyDataList, author_storyDataList, 
-    calPairUnpairStory, getAllChaptersofStory
+    calPairUnpairStory, getAllChaptersofStory,
+    getComment, addComment, updatePayStt
 }

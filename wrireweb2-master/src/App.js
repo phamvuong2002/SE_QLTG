@@ -21,7 +21,7 @@ import Detail_Editor_Ad from './containers/admin/editor/detailEditor';
 import Read_ad from './containers/admin/story/read';
 
 import path from './ultis/path';
-let role = 'admin'
+let role = 'editor'
 function App() { 
   // let temp = localStorage.getItem('login_role');
   // // localStorage.removeItem('login_role');

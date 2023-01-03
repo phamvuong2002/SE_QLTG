@@ -1,9 +1,9 @@
 import React from 'react'
 const authorid = "AU7922632" // get from login page
-const PersonName  = "Web lol" // get from login page
+// const PersonName  = "Web lol" // get from login page
 //const authorid = "AU7947660"
 localStorage.setItem('authorid', authorid)
-localStorage.setItem('PersonName', PersonName)
+// localStorage.setItem('PersonName', PersonName)
 let dataauthor = {
     "numstory": "",
     "numchap": "",
