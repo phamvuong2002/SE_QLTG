@@ -134,7 +134,7 @@ BEGIN
 			RETURN 0
 		END
 
-	SELECT S.STORYID, S.STORYNAME, S.NUMOFCHAPS, S.AVATAR, 'Chapters' AS 'PROCESS'
+	SELECT S.STORYID, S.STORYNAME, S.NUMOFCHAPS, S.AVATAR, 'Chapters' AS 'PROCESS', (SELECT AUTHORNAME FROM AUTHOR WHERE AUTHORID = S.AUTHORID) AS 'AUTHORNAME'
 	FROM STORY S WHERE S.AUTHORID IN (SELECT * FROM @LIST)
 END 
 GO
@@ -223,72 +223,6 @@ END
 GO
 
 ----------------------------9----------------------------
-DROP PROC IF EXISTS USP_deleteAdmin
-GO
-
-CREATE 
---ALTER 
-PROC USP_deleteAdmin
-	@adminid CHAR(10)
-AS
-BEGIN 
-	IF NOT EXISTS (SELECT ADMINID FROM ADMIN WHERE TRIM(ADMINID) = TRIM(@adminid))
-		BEGIN
-			SELECT 'ID IS NOT EXIST' AS 'ERROR'
-			ROLLBACK TRAN
-			RETURN 0
-		END
-
-	DELETE FROM ADMIN WHERE TRIM(ADMINID) = TRIM(@adminid)
-	SELECT 'DELETE ADMIN ' + @adminid + ' SUCCESSFULLY' AS '1'
-END
-GO
-
-----------------------------10----------------------------
-DROP PROC IF EXISTS USP_deleteAuthor
-GO
-
-CREATE 
---ALTER 
-PROC USP_deleteAuthor
-	@authorid CHAR(10)
-AS
-BEGIN
-	IF NOT EXISTS (SELECT AUTHORID FROM AUTHOR WHERE TRIM(AUTHORID) = TRIM(@authorid))
-		BEGIN
-			SELECT 'ID IS NOT EXIST' AS 'ERROR'
-			ROLLBACK TRAN
-			RETURN 0
-		END
-
-	DELETE FROM AUTHOR WHERE TRIM(AUTHORID) = TRIM(@authorid)
-	SELECT 'DELETE AUTHOR ' + @authorid + ' SUCCESSFULLY' AS '1'
-END	
-GO
-
-----------------------------11----------------------------
-DROP PROC IF EXISTS USP_deleteEditor
-GO
-
-CREATE 
---ALTER 
-PROC USP_deleteEditor
-	@editorid CHAR(10)
-AS
-BEGIN 
-	IF NOT EXISTS (SELECT EDITORID FROM EDITOR WHERE TRIM(EDITORID) = TRIM(@editorid))
-		BEGIN
-			SELECT 'ID IS NOT EXIST' AS 'ERROR'
-			ROLLBACK TRAN
-			RETURN 0
-		END
-
-	DELETE FROM EDITOR WHERE TRIM(EDITORID) = TRIM(@editorid)
-	SELECT 'DELETE EDITOR ' + @editorid + ' SUCCESSFULLY' AS '1'
-END
-GO
-
-----------------------------12----------------------------
 DROP PROC IF EXISTS USP_getAuthorFromEditor 
 GO
 
@@ -317,7 +251,7 @@ GO
 --EXEC USP_getAllEditors @adminid = 'AD342720'
 --EXEC USP_getAuthorFromEditor @editorid = 'ED949502'
 
-----------------------------13----------------------------
+----------------------------10----------------------------
 DROP PROC IF EXISTS USP_calPaidUnpaidStory
 GO
 
@@ -340,7 +274,7 @@ go
 --EXEC storydatalist 'AU0886539  '
 --EXEC USP_calPaidUnpaidStory 'ST188007    '
 
-----------------------------14----------------------------
+----------------------------11----------------------------
 DROP PROC IF EXISTS USP_storyDataList
 GO
 
@@ -362,7 +296,31 @@ begin
 end
 go
 
+----------------------------12----------------------------
+drop proc if exists getAllChaptersofStory
+go
 
-
+CREATE
+--alter
+proc getAllChaptersofStory
+	@storyid char(10)
+as
+begin
+	if(select NUMOFCHAPS from STORY where STORYID = @storyid) = 0
+	begin
+		select 'STORY HAS NO CHAPTERS' as ERROR
+		return 0
+	end
+	declare @name varchar(30), 
+	@paid_stt varchar(10) = 'Paid', 
+	@stt varchar(10) = 'unchecked'
+	select CHAPTERNAME as name, CONTENT as content,
+			Convert(varchar, Case When UNPAIR > 0 Then 'UnPaid' Else 'Paid' End) As paid_stt, 
+			Convert(varchar, Case When UNPAIR = -1 Then 'UnChecked' Else 'Checked' End) As stt 
+	from CHAPTER 
+	where STORYID = @storyid
+	
+end
+GO
 
 

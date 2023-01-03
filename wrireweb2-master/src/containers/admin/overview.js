@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import Create_Account from './account/createAcc'
+import React, { useState, useEffect } from 'react';
+import Create_Account from './account/createAcc';
+import { useNavigate } from 'react-router-dom';
+import Account from './account';
 const adminid = 'AD342720'; //update later
 localStorage.setItem('adminid', JSON.stringify(adminid));
 
@@ -19,7 +21,7 @@ const Overview = () => {
             });
         });
     }, []);
-
+    const navigate = useNavigate();
     // console.log(data);
     return (
         <div className='flex-col w-fit h-fit bg-[#F7F8FC] ml-[70px]'>     
@@ -75,25 +77,17 @@ const Overview = () => {
                         </div>   
                     </div>
                     <hr></hr>
-                    <div className='flex pt-5 pl-6 pb-3'>
-                        <p className='text-[#252733] pr-[270px]'>
-                            Delete account
-                        </p>
-                        <div className='bg-[#EC1D29] rounded-[100px]'>
-                            <button className='mx-3 text-[#ffffff]' >
-                                Delete
-                            </button>
-                        </div> 
-                    </div>
                     <hr></hr>
                     <div className='flex pt-5 pl-6 pb-3'>
                         <p className='text-[#252733] pr-[330px]'>
                             See all
                         </p>
                         <div className='bg-[#9d9d9d] rounded-[100px]'>
-                            <button className='mx-3 text-[#ffffff]' >
-                                See all
-                            </button>
+                            <a href="/account">   
+                                <button className='mx-3 text-[#ffffff]'>
+                                    See all
+                                </button>
+                            </a>
                         </div> 
                     </div>
                 </div>

@@ -11,10 +11,11 @@ const GetStories = () => {
     .then(actualData => {
         // console.log(actualData.length);
         for(let i = 0; i < actualData.length; i++){
-          storydatalist.push({"avt": actualData[i].AVATAR, "storyid": actualData[i].STORYID, "name": actualData[i].STORYNAME, "process": actualData[i].PROCESS, "approve": actualData[i].NUMOFCHAPS});
+          storydatalist.push({"avt": actualData[i].AVATAR, "storyid": actualData[i].STORYID, "name": actualData[i].STORYNAME, 
+          "process": actualData[i].PROCESS, "numofchaps": actualData[i].NUMOFCHAPS, "authorname": actualData[i].AUTHORNAME});
         }
     });
-  // console.log("story:", storydatalist);
+  console.log("story:", storydatalist);
 };
 
 GetStories();

@@ -1,15 +1,28 @@
 import React, {useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
+var authordatalist = [];
 
-const GetList = (id) => {
-    let url = `http://localhost:8080/admin//editorAuthorList/${id}`;
-    var authordatalist = [];
+const OverviewEditor = ({editorid, avt, name, penname, author, story}) => {
+  const navigate = useNavigate();
+  // console.log("ad_editor1:", JSON.parse(localStorage.getItem('ad_editor') || '[]').editorid);
+  
+  const HandleClick = async () => {
+    // alert('aaaaaaaaaaaaa');
+    // console.log(storyid);
+    // localStorage.removeItem('ad_editor');
+    // localStorage.removeItem('authordatalist');
+    var ad_editor = {"editorid": editorid, "name": name, "avt": avt, "author": author, "story": story};
+    localStorage.setItem('ad_editor', JSON.stringify(ad_editor));
+    // console.log(editor.author);
+    // console.log("ad_editor2:", JSON.parse(localStorage.getItem('ad_editor')).editorid);
+    let url = `http://localhost:8080/admin//editorAuthorList/${editorid}`;
+
     fetch(url)
     .then((response) => response.json())
     .then(actualData => {
         // console.log(actualData.length);
         if(Object.keys(actualData[0]) == 'ERROR'){
-            console.log("ERROR: ", actualData[0].ERROR);
+            alert("ERROR: ", actualData[0].ERROR);
         }
         else{
             for(let i = 0; i < actualData.length; i++){
@@ -26,22 +39,6 @@ const GetList = (id) => {
             localStorage.setItem('authordatalist', JSON.stringify(authordatalist));
         }
     });
-};
-
-const OverviewEditor = ({editorid, avt, name, penname, author, story}) => {
-  const navigate = useNavigate();
-  // console.log("ad_editor1:", JSON.parse(localStorage.getItem('ad_editor') || '[]').editorid);
-  
-  const HandleClick = () => {
-    // alert('aaaaaaaaaaaaa');
-    // console.log(storyid);
-    // localStorage.removeItem('ad_editor');
-    // localStorage.removeItem('authordatalist');
-    var ad_editor = {"editorid": editorid, "name": name, "avt": avt, "author": author, "story": story};
-    localStorage.setItem('ad_editor', JSON.stringify(ad_editor));
-    // console.log(editor.author);
-    // console.log("ad_editor2:", JSON.parse(localStorage.getItem('ad_editor')).editorid);
-    GetList(ad_editor.editorid);
     // console.log('ae1:', JSON.parse(localStorage.getItem('ad_editor') || '[]'));
     
     // window.location.reload();

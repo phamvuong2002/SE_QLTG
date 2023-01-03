@@ -9,8 +9,9 @@ const OverviewStoryList = ({storyData}) => {
         storyid={data.storyid}
         avt={data.avt}
         name={data.name}
-        Process={data.process}
-        approve={data.approve}
+        process={data.process}
+        numofchaps={data.numofchaps}
+        authorname={data.authorname}        
         // unpaid={data.unpaid}
         // paid={data.paid}    
         />
