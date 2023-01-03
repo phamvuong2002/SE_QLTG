@@ -40,6 +40,24 @@ const getAllChaptersofStory = async (req, res, next) => {
         res.status(400).send(error.message);
     }
 }
+const getDraft = async (req, res, next) => {
+    try {
+        const storyid = req.params.id;
+        const draft = await AuthorsData.getDraft(storyid);
+        res.send(draft);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+const getOutline = async (req, res, next) => {
+    try {
+        const storyid = req.params.id;
+        const outline = await AuthorsData.getOutline(storyid);
+        res.send(outline);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
 const createStory = async (req, res, next) => {
     try {
         const data = req.body;
@@ -49,6 +67,43 @@ const createStory = async (req, res, next) => {
         res.status(400).send(error.message);
     }
 }
+const createChapter = async (req, res, next) => {
+    try {
+        const data = req.body;
+        const insert = await AuthorsData.createChapter(data);
+        res.send(insert);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+const createOutline = async (req, res, next) => {
+    try {
+        const data = req.body;
+        const insert = await AuthorsData.createOutline(data);
+        res.send(insert);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+const updateStory = async (req, res, next) => {
+    try {
+        const data = req.body;
+        const result = await AuthorsData.updateStory(data);
+        res.send(result);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+const updateChapter = async (req, res, next) => {
+    try {
+        const data = req.body;
+        const result = await AuthorsData.updateChapter(data);
+        res.send(result);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
 module.exports = {
-    countStory, storyDatalist, calPairUnpairStory, getAllChaptersofStory, createStory
+    countStory, storyDatalist, calPairUnpairStory, getAllChaptersofStory, createStory, createChapter,
+    createOutline, getDraft, getOutline, updateStory, updateChapter
 }
