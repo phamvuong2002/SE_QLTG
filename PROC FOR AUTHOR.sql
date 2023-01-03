@@ -226,9 +226,14 @@ proc getDraft
 	@storyid char(10)
 as
 begin
-	if not exists(select STORYID from STORY where STORYID = @storyid)
+	--if not exists(select STORYID from STORY where STORYID = @storyid)
+	--	begin
+	--		select 'STORY is not exists' ERROR
+	--		return 0
+	--	end
+	if not exists(select DRAFTID from DRAFT where STORYID = @storyid)
 		begin
-			select 'STORY is not exists' ERROR
+			select 'STORY has no draft' ERROR
 			return 0
 		end
 	select top 1 Convert(varchar, Case When UNPAIR > 0 Then 'UnPaid' Else 'Paid' End) As paid_stt, 
@@ -238,8 +243,8 @@ begin
 end
 select *from DRAFT where DRAFTID = 'DR10970447'
 exec getDraft 'ST10970447'
-exec getDraft 'ST27449577'
-select *from STORY 
+exec getDraft 'ST015092  '
+select *from STORY where STORYID = 'ST015092  '
 -----------------------get outline--------------------------------
 create
 --alter
@@ -263,7 +268,7 @@ begin
 			CONTENT content, OUTLINEID id
 			from OUTLINE where STORYID = @storyid
 end
-exec getOutline 'ST10970447'
+exec getOutline 'ST787374  '
 select *from OUTLINE where STORYID = 'ST35511901'
 select *from STORY
 -------------------create story------------------

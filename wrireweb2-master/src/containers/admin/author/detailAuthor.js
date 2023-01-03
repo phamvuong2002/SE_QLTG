@@ -7,14 +7,70 @@ import { useNavigate } from 'react-router-dom';
 const AllAuthorWork = ({storyid, avt, name, process, unpaid, paid, numofchaps}) => {
     const navigate = useNavigate();
     const ad_author = JSON.parse(localStorage.getItem('ad_author') || '[]');
-    const HandleClick = () => {
+    const HandleClick = async() => {
         var ad_story = {"storyid": storyid, "name": name, "avt": avt, "paid": paid, "unpaid": unpaid, "authorname": ad_author, "numofchaps": numofchaps};
         console.log(ad_story);
         localStorage.setItem('ad_story', JSON.stringify(ad_story));
-        navigate('/story/detail');
-        window.location.reload();
-        // window.location.href='/story/detail';
-      };
+
+        let url_cal = `http://localhost:8080/admin/calPaidUnpaidStory/${storyid}`;
+        const response_cal = await fetch(url_cal);
+        const data_cal = await response_cal.json();
+        // console.log("data_cal:", data_cal);
+        var unpaid = data_cal[0].unpaid.toFixed(2);
+        var paid = data_cal[0].paid.toFixed(2);
+        localStorage.setItem('storyid',storyid);
+        localStorage.setItem('authorname',ad_author.name);
+        localStorage.setItem('avt',avt);
+        localStorage.setItem('name_content',name);
+        localStorage.setItem('unpaid',unpaid);
+        localStorage.setItem('paid',paid);
+        localStorage.setItem('numofchaps',numofchaps);
+
+        // get chapters
+        let url = "http://localhost:8080/author/getallchapterofstory/"
+        url = url + storyid 
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if(Object.keys(data[0]) == 'ERROR'){
+            localStorage.setItem('chapterdatalist',JSON.stringify(data)) 
+            alert("ERROR: " + data[0].ERROR)
+        }
+        else{ 
+            localStorage.setItem('chapterdatalist',JSON.stringify(data)) 
+        }
+        // get draft
+        let url2 = "http://localhost:8080/author/getdraft/"
+        url2 = url2 + storyid 
+        const response_draft = await fetch(url2);
+        const data_draft = await response_draft.json();
+
+        if(Object.keys(data_draft[0]) == 'ERROR'){
+            localStorage.setItem('data_draft',JSON.stringify(data_draft[0])) 
+            alert("ERROR: " + data_draft[0].ERROR)
+        }
+        else{ 
+            localStorage.setItem('data_draft',JSON.stringify(data_draft[0])) 
+        }
+        //get outline
+        let url3 = "http://localhost:8080/author/getoutline/"
+        url3 = url3 + storyid 
+        const response_outline = await fetch(url3);
+        const data_outline = await response_outline.json();
+
+        if(Object.keys(data_outline[0]) == 'ERROR'){
+            localStorage.setItem('data_outline',null) 
+            alert("ERROR: " + data_outline[0].ERROR)
+        }
+        else{ 
+            localStorage.setItem('data_outline',JSON.stringify(data_outline[0])) 
+        }
+        //await timeout(5000)
+        // to detail page
+        navigate('/story/detail')
+        //reload to update page
+        window.location.reload()
+    };
     return(
         <div className='flex' onClick={HandleClick}>
             <div className='text-[#9FA2B4] ml-[20px] mt-[10px] font-bold text-sm w-[50px] h-[50px]'>

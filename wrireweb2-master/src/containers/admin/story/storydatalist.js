@@ -15,7 +15,7 @@ const GetStories = () => {
           "process": actualData[i].PROCESS, "numofchaps": actualData[i].NUMOFCHAPS, "authorname": actualData[i].AUTHORNAME});
         }
     });
-  console.log("story:", storydatalist);
+  // console.log("story:", storydatalist);
 };
 
 GetStories();
