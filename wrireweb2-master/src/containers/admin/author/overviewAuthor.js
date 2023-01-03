@@ -1,16 +1,35 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-async function GetAuthorStoryList(id){
-    console.log("id:", id);
-    // window.location.reload();
-    let authorstorylist = [];
-    let url = `http://localhost:8080/admin/storyDataList/${id}`;
+let authorstorylist = [];
+
+const OverviewAuthor = ({authorid, avt, name, penname, chapter, story/*, paid_stt*/}) => {
+  const navigate = useNavigate();
+  
+  const HandleClick = async () => {
+    // console.log(storyid);
+    var ad_author = {"authorid": authorid, "name": name, "avt": avt};
+    console.log("ad_author0:", ad_author.authorid);
+    localStorage.setItem('ad_author', JSON.stringify(ad_author));
+    // GetAuthorStoryList(authorid);
+    let url = `http://localhost:8080/admin/storyDataList/${authorid}`;
     const response = await fetch(url);
     const data = await response.json();
     
     if(Object.keys(data[0]) == 'ERROR'){
         alert("ERROR: " + data[0].ERROR);
+        var newauthorstorylist = {
+            unpaid: 0,
+            paid: 0,
+            storyid: "None",
+            avt: "empty.jpg",
+            name: "None",
+            process: "None",
+            numofchaps: 0,
+            approve: 0
+        };
+        authorstorylist.push(newauthorstorylist);
+        localStorage.setItem('authorstorylist', JSON.stringify(authorstorylist));
     }
     else{ 
         for(let i = 0; i<data.length; i++){
@@ -25,19 +44,8 @@ async function GetAuthorStoryList(id){
         localStorage.setItem('authorstorylist', JSON.stringify(authorstorylist));
         console.log('authorstorylist1:', JSON.parse(localStorage.getItem('authorstorylist')));
     }
-}
-
-const OverviewAuthor = ({authorid, avt, name, penname, chapter, story/*, paid_stt*/}) => {
-  const navigate = useNavigate();
-  
-  const HandleClick = () => {
-    // console.log(storyid);
-    var ad_author = {"authorid": authorid, "name": name, "avt": avt};
-    console.log("ad_author0:", ad_author.authorid);
-    localStorage.setItem('ad_author', JSON.stringify(ad_author));
-    GetAuthorStoryList(authorid);
-    navigate('/author/detail', { replace: true });
-    // window.location.reload();
+    navigate('/author/detail');
+    window.location.reload();
   };
 
   return (

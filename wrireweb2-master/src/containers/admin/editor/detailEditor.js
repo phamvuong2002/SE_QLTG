@@ -1,42 +1,49 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-async function GetAuthorStoryList(id){
-    console.log("id:", id);
-    // window.location.reload();
-    let authorstorylist = [];
-    let url = `http://localhost:8080/admin/storyDataList/${id}`;
-    const response = await fetch(url);
-    const data = await response.json();
-    
-    if(Object.keys(data[0]) == 'ERROR'){
-        alert("ERROR: " + data[0].ERROR);
-    }
-    else{ 
-        for(let i = 0; i<data.length; i++){
-            let url_cal = "http://localhost:8080/admin/calPaidUnpaidStory/";
-            url_cal = url_cal + data[i].storyid;
-            const response_cal = await fetch(url_cal);
-            const data_cal = await response_cal.json();
-            data[i]["unpaid"] = data_cal[0].unpaid.toFixed(2);
-            data[i]["paid"] = data_cal[0].paid.toFixed(2);
-        }
-        authorstorylist = data;
-        localStorage.setItem('authorstorylist', JSON.stringify(authorstorylist));
-        console.log('authorstorylist1:', JSON.parse(localStorage.getItem('authorstorylist')));
-    }
-}
+let authorstorylist = [];
 
 const AllEditorWork = ({authorid, name, penname, story, chapter, avt}) => {
     // authordatalist = [];
     const navigate = useNavigate();
-    const HandleClick = () => {
+    const HandleClick = async () => {
         var ad_author = {"authorid": authorid, "name": name, "avt": avt};
         localStorage.setItem('ad_author', JSON.stringify(ad_author));
-        GetAuthorStoryList(ad_author.authorid);
+        let url = `http://localhost:8080/admin/storyDataList/${authorid}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if(Object.keys(data[0]) == 'ERROR'){
+            alert("ERROR: " + data[0].ERROR);
+            var newauthorstorylist = {
+                unpaid: 0,
+                paid: 0,
+                storyid: "None",
+                avt: "empty.jpg",
+                name: "None",
+                process: "None",
+                numofchaps: 0,
+                approve: 0
+            };
+            authorstorylist.push(newauthorstorylist);
+            localStorage.setItem('authorstorylist', JSON.stringify(authorstorylist));
+        }
+        else{ 
+            for(let i = 0; i<data.length; i++){
+                let url_cal = "http://localhost:8080/admin/calPaidUnpaidStory/";
+                url_cal = url_cal + data[i].storyid;
+                const response_cal = await fetch(url_cal);
+                const data_cal = await response_cal.json();
+                data[i]["unpaid"] = data_cal[0].unpaid.toFixed(2);
+                data[i]["paid"] = data_cal[0].paid.toFixed(2);
+            }
+            authorstorylist = data;
+            localStorage.setItem('authorstorylist', JSON.stringify(authorstorylist));
+            console.log('authorstorylist1:', JSON.parse(localStorage.getItem('authorstorylist')));
+        }
         navigate('/author/detail');
-        // window.location.reload();
-      };
+        window.location.reload();
+    };
     return(
         <div className='flex' onClick={HandleClick}>
             <div className='text-[#9FA2B4] ml-[20px] mt-[10px] font-bold text-sm w-[50px] h-[50px]'>

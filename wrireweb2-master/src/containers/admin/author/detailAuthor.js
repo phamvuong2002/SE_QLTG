@@ -8,10 +8,11 @@ const AllAuthorWork = ({storyid, avt, name, process, unpaid, paid, numofchaps}) 
     const navigate = useNavigate();
     const ad_author = JSON.parse(localStorage.getItem('ad_author') || '[]');
     const HandleClick = () => {
-        var ad_story = {"storyid": storyid, "name": name, "avt": avt, "paid": paid, "unpaid": unpaid, "authorid": ad_author.authorid, "authorname": ad_author.name};
+        var ad_story = {"storyid": storyid, "name": name, "avt": avt, "paid": paid, "unpaid": unpaid, "authorname": ad_author, "numofchaps": numofchaps};
         console.log(ad_story);
         localStorage.setItem('ad_story', JSON.stringify(ad_story));
         navigate('/story/detail');
+        window.location.reload();
         // window.location.href='/story/detail';
       };
     return(
@@ -73,7 +74,7 @@ const OverviewAuthorStoryList = ({authorstorylist}) => {
 const Detail_Author_ad = () => {
     const ad_author = JSON.parse(localStorage.getItem('ad_author') || '[]');
     console.log("ad_author1:", ad_author.authorid);
-    let authorstorylist = JSON.parse(localStorage.getItem('authorstorylist'));
+    let authorstorylist = JSON.parse(localStorage.getItem('authorstorylist') || '[]');
     var unpaid = 0;
     var paid = 0;
     for(let i = 0; i < authorstorylist.length; i++){

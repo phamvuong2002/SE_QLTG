@@ -2,16 +2,24 @@ import React from 'react';
 // import { no_god } from '../../../assets'
 import { useNavigate } from 'react-router-dom';
 
-const OverviewStory = ({key, storyid, avt, name, Process, approve/*, unpaid, paid*/}) => {
-  localStorage.removeItem('admin_storyid');
+const OverviewStory = ({authorname, storyid, avt, name, process, numofchaps/*, unpaid, paid*/}) => {
+    const navigate = useNavigate();  
+    //   localStorage.removeItem('ad_storyid');
 //   console.log("admin_storyid1:", JSON.parse(localStorage.getItem('admin_storyid')));
-  const navigate = useNavigate();  
-  const HandleClick = () => {
+  const HandleClick = async () => {
     // console.log(storyid);
-    localStorage.setItem('admin_storyid', JSON.stringify(storyid));
-    // console.log("admin_storyid2:", JSON.parse(localStorage.getItem('admin_storyid')));
+    let url_cal = `http://localhost:8080/admin/calPaidUnpaidStory/${storyid}`;
+    var ad_story = {"authorname": authorname, "storyid": storyid, "avt": avt, "name": name, "process": process, "numofchaps": numofchaps};
+    const response_cal = await fetch(url_cal);
+    const data_cal = await response_cal.json();
+    console.log("data_cal:", data_cal);
+    ad_story.unpaid = data_cal[0].unpaid.toFixed(2);
+    ad_story.paid = data_cal[0].paid.toFixed(2);
+    localStorage.setItem('ad_story', JSON.stringify(ad_story));
+    // localStorage.setItem('ad_story', JSON.stringify(null));
+    console.log('ad_story:', JSON.parse(localStorage.getItem('ad_story')));
     navigate('/story/detail');
-    // window.location.href='/story/detail';
+    window.location.reload();
   };
 
   return (
@@ -26,10 +34,10 @@ const OverviewStory = ({key, storyid, avt, name, Process, approve/*, unpaid, pai
 
         <div className='mx-[20px] flex-col '>
             <div className='font-semibold my-[3px] text-[14px] w-[60px] text-center'>
-                {Process}
+                {process}
             </div>
             <div className='text-[12px] text-[#C5C7CD] w-[60px] text-center'>
-                {approve}
+                {numofchaps}
             </div>
         </div>
         {/* <div className='ml-[180px] flex-col'>

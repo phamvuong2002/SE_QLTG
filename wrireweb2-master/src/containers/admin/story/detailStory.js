@@ -1,32 +1,30 @@
 import React from 'react'
 import { eren } from '../../../assets'
 import OverviewChapter  from './overviewChapter'
-import OverviewChapterList from './overviewChapterList' 
-import OverviewDraft_Outline from './overviewDraft_Outline'
+import OverviewChapterList from './overviewChapterList'; 
+import OverviewDraft_Outline from './overviewDraft_Outline';
 
-import { chapterdatalist } from './chapterdatalist'
+import { chapterdatalist } from './chapterdatalist';
 
-import { useNavigate } from 'react-router-dom'
-
-import Write from './read'
+import { useNavigate } from 'react-router-dom';
 
 const DetailStory_ed = () => {
-
   const navigate = useNavigate()
-
+  const ad_story = JSON.parse(localStorage.getItem('ad_story') || '[]');
+  console.log("ad_story1:", ad_story);
   return (
     <div className='bg-[#ffffff] w-[1122px] h-[657px] shadow-2xl rounded-lg border border-[#DFE0EB] ml-[70px]'>
         <div className='flex h-[180px]'>
 
-            <img src={eren} alt='Avt' className=' w-[100px] h-[100px] rounded-full my-[15px] mx-[15px]' />
+            <img src={'/' + ad_story.avt} alt='Avt' className=' w-[100px] h-[100px] rounded-full my-[15px] mx-[15px]' />
 
             <div className='flex-col'>
                 <div className='text-[36px] font-semibold'>
-                    Chú bé chăn cừu
+                    {ad_story.name}
                 </div>
                 <div className='flex'>
                     <div className='text-[20px] text-[#C5C7CD]'>Author:</div>
-                    <div className='text-[20px] font-bold mx-[15px]'>Ai đó</div>
+                    <div className='text-[20px] font-bold mx-[15px]'>{ad_story.authorname}</div>
                 </div>
             </div>
 
@@ -38,7 +36,7 @@ const DetailStory_ed = () => {
                             <button className=' w-[152px] h-[90px]' >
                                 <div className='flex-col'>
                                     <div className='text-[#9FA2B4] text-[19px] font-semibold mt-[10px]'> Paid </div>
-                                    <div className='text-[#252733] text-[24px] font-semibold'> 60 </div>
+                                    <div className='text-[#252733] text-[24px] font-semibold'> {ad_story.paid}$ </div>
                                 </div>
                             </button>
                         </div>   
@@ -49,7 +47,7 @@ const DetailStory_ed = () => {
                             <button className=' w-[152px] h-[90px]' >
                                 <div className='flex-col'>
                                     <div className='text-[#9FA2B4] text-[19px] font-semibold mt-[10px]'> Unpaid </div>
-                                    <div className='text-[#252733] text-[24px] font-semibold'> 60 </div>
+                                    <div className='text-[#252733] text-[24px] font-semibold'> {ad_story.unpaid}$ </div>
                                 </div>
                             </button>
                         </div>   
@@ -60,7 +58,7 @@ const DetailStory_ed = () => {
                             <button className=' w-[152px] h-[90px]' >
                                 <div className='flex-col'>
                                     <div className='text-[#9FA2B4] text-[19px] font-semibold mt-[10px]'> Chapters </div>
-                                    <div className='text-[#252733] text-[24px] font-semibold'> 60 </div>
+                                    <div className='text-[#252733] text-[24px] font-semibold'> {ad_story.numofchaps} </div>
                                 </div>
                             </button>
                         </div>   
