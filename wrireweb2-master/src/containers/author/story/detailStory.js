@@ -15,14 +15,22 @@ let chapterdatalist = []
 const authorname = localStorage.getItem('PersonName')
 const storyid = localStorage.getItem('storyid')
 const avt = localStorage.getItem('avt')
-const name = localStorage.getItem('name')
+const name_content = localStorage.getItem('name_content')
 const unpaid = localStorage.getItem('unpaid')
 const paid = localStorage.getItem('paid')
 const approve = localStorage.getItem('approve')
 
 
 const DetailStory_au = () => {
+    //get chapters, draft and ouline data 
     chapterdatalist = JSON.parse(localStorage.getItem('chapterdatalist'))
+    let Draft_stt = JSON.parse(localStorage.getItem('data_draft'))
+    let Outline_stt = JSON.parse(localStorage.getItem('data_outline'))
+    let outlinetab
+    if(Outline_stt !== null){
+        outlinetab = <OverviewDraft_Outline id = {Outline_stt.id} content={Outline_stt.content} name={'Outline'} paid_stt= {Outline_stt.paid_stt} stt={Outline_stt.stt} />
+    }
+   
     const navigate = useNavigate()
     function click_chapter() {
         localStorage.setItem('TYPE', 'CHAPTER')
@@ -42,7 +50,7 @@ const DetailStory_au = () => {
 
                 <div className='flex-col'>
                     <div className='text-[36px] font-semibold'>
-                        {name}
+                        {name_content}
                     </div>
                     <div className='flex'>
                         <div className='text-[20px] text-[#C5C7CD]'>Author:</div>
@@ -115,16 +123,15 @@ const DetailStory_au = () => {
                 <div className='items-center px-5 my-[20px] bg-white font-bold border-t'>
                     Story
                 </div>
-                <OverviewDraft_Outline name={'Draft'} paid_stt='Paid' stt='Checked' />
-                <OverviewDraft_Outline name={'Outline'} paid_stt='Paid' stt='Checked' />
+                <OverviewDraft_Outline id ={Draft_stt.id} content={Draft_stt.content} name={'Draft'} paid_stt={Draft_stt.paid_stt} stt={Draft_stt.stt} />
+                {/* <OverviewDraft_Outline name={'Outline'} paid_stt='Paid' stt='Checked' /> */}
+                {outlinetab}
                 <div className='items-center px-5 h-[60px] bg-white border-t py-[10px] font-semibold'>
                     Chapters : { }
                 </div>
 
                 <OverviewChapterList chapterData={chapterdatalist} />
             </div>
-
-
         </div>
     )
 }

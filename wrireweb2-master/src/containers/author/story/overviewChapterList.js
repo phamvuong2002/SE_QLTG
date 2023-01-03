@@ -6,6 +6,8 @@ let OverviewChapterList = ({chapterData}) => {
     <div className='overflow-y-scroll h-[220px]'>
         {chapterData.map((data) => (
             <OverviewChapter
+            id = {data.id}
+            content = {data.content}
             name={data.name}
             paid_stt={data.paid_stt}
             stt={data.stt}

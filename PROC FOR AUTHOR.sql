@@ -1,4 +1,4 @@
-select *from STORY
+﻿select *from STORY
 ----------------COUNT STORY---------------------
 create 
 --alter 
@@ -13,14 +13,20 @@ begin
 	end
 	declare @story int = 0, @chap int = 0
 	select @story = ISNULL(COUNT(STORYID),0), @chap = ISNULL(sum(NUMOFCHAPS),0) from STORY where AUTHORID = @authorid	
-	declare @earn float = 0, @unpair float = 0
-	select @earn = @earn + sum(GIA), @unpair = @unpair + sum(UNPAIR)  from CHAPTER where AUTHORID = @authorid 
-	select @earn = @earn + sum(GIA), @unpair = @unpair + sum(UNPAIR)  from DRAFT where AUTHORID = @authorid 
-	select @earn = @earn + sum(GIA), @unpair = @unpair + sum(UNPAIR)  from OUTLINE where AUTHORID = @authorid 
+	declare @earn float = 0, @unpair float = 0 
+
+	select @earn = @earn + ISNULL(sum(GIA),0), @unpair = @unpair + ISNULL(sum(UNPAIR),0)
+	from STORY ST join DRAFT DT on ST.AUTHORID = @authorid and ST.STORYID = DT.STORYID
+
+	select @earn = @earn + ISNULL(sum(GIA),0), @unpair = @unpair + ISNULL(sum(UNPAIR),0)
+	from STORY ST join OUTLINE OL on ST.AUTHORID = @authorid and ST.STORYID = OL.STORYID
+
+	select @earn = @earn + ISNULL(sum(GIA),0), @unpair = @unpair + ISNULL(sum(UNPAIR),0)
+	from STORY ST join CHAPTER CT on ST.AUTHORID = @authorid and ST.STORYID = CT.STORYID
 	select @story numstory, @chap numchap, @earn earn, (@earn - @unpair) as 'receive'
 end
-go
-exec countStory 'AU7947660'
+exec countStory 'AU7922632'
+select *from STORY WHERE STORYNAME = 'Supkililentor'
 
 
 ---------------update draft table-----
@@ -165,3 +171,366 @@ exec calPairUnpairStory 'ST999614  '
 select *from DRAFT WHERE STORYID = 'ST999614  '
 select *from OUTLINE WHERE STORYID = 'ST999614  '
 select *from CHAPTER WHERE STORYID = 'ST999614  '
+
+select *from STORY
+declare @image varchar(30),@i int = 0
+while @i < 50
+begin
+	set @image = 'avatar_vio_' + CAST(FLOOR(RAND()*(20-1)+1) as varchar) + '.jpg'
+	update STORY
+	set AVATAR = @image
+	where STORYID = ( SELECT TOP 1 STORYID FROM STORY
+							ORDER BY NEWID())
+	set @i = @i + 1
+end
+
+update STORY 
+SET STATE = 'DONE'
+
+declare @i int = 0
+while @i < 10
+begin
+	update STORY
+	set STATE = 'ON GOING'
+	where STORYID = ( SELECT TOP 1 STORYID FROM STORY WHERE NUMOFCHAPS <> 0
+							ORDER BY NEWID())
+	set @i = @i + 1
+end
+select *from STORY
+
+---------------------get all chapter of story-----------------
+create
+--alter
+proc getAllChaptersofStory
+	@storyid char(10)
+as
+begin
+	if(select NUMOFCHAPS from STORY where STORYID = @storyid) = 0
+	begin
+		select 'STORY HAS NO CHAPTERS' ERROR
+		return 0
+	end
+	declare @name varchar(30), @unpaid float, @editorid char(10), @paid_stt varchar(10) = 'Paid', @stt varchar(10) = 'unchecked'
+	select CHAPTERNAME name, Convert(varchar, Case When UNPAIR > 0 Then 'UnPaid' Else 'Paid' End) As paid_stt, 
+			Convert(varchar, Case When EDITORID is null Then 'UnChecked' Else 'Checked' End) As stt,
+			CONTENT content, CHAPTERID id
+			from CHAPTER where STORYID = @storyid
+	
+end
+
+exec getAllChaptersofStory 'ST999614'
+-----------------------get draft ---------------------------------
+create
+--alter
+proc getDraft
+	@storyid char(10)
+as
+begin
+	if not exists(select STORYID from STORY where STORYID = @storyid)
+		begin
+			select 'STORY is not exists' ERROR
+			return 0
+		end
+	select top 1 Convert(varchar, Case When UNPAIR > 0 Then 'UnPaid' Else 'Paid' End) As paid_stt, 
+			Convert(varchar, Case When EDITORID is null Then 'UnChecked' Else 'Checked' End) As stt,
+			CONTENT content, DRAFTID id
+			from DRAFT where STORYID = @storyid
+end
+select *from DRAFT where DRAFTID = 'DR10970447'
+exec getDraft 'ST10970447'
+exec getDraft 'ST27449577'
+select *from STORY 
+-----------------------get outline--------------------------------
+create
+--alter
+proc getOutline
+	@storyid char(10)
+as
+begin
+	if not exists(select STORYID from STORY where STORYID = @storyid)
+		begin
+			select 'STORY is not exists' ERROR
+			return 0
+		end
+	if not exists(select STORYID from OUTLINE where STORYID = @storyid)
+		begin
+			select 'STORY has no outline' ERROR
+			return 0
+		end
+
+	select top 1 Convert(varchar, Case When UNPAIR > 0 Then 'UnPaid' Else 'Paid' End) As paid_stt, 
+			Convert(varchar, Case When EDITORID is null Then 'UnChecked' Else 'Checked' End) As stt,
+			CONTENT content, OUTLINEID id
+			from OUTLINE where STORYID = @storyid
+end
+exec getOutline 'ST10970447'
+select *from OUTLINE where STORYID = 'ST35511901'
+select *from STORY
+-------------------create story------------------
+create
+--alter
+proc createStory
+	@authorid char(10),
+	@storyid char(10),
+	@storyname nchar(30),
+	@content ntext
+as
+begin tran
+	if not exists(select AUTHORID from AUTHOR where AUTHORID = @authorid)
+	begin
+		select 'Author is not exists' ERROR
+		rollback tran
+		return 0
+	end
+	if exists(select STORYID from STORY where STORYID = @storyid)
+	begin
+		select 'Story already exists' ERROR
+		rollback tran
+		return 0
+	end
+	declare @editor char(10) = (select EDITORID from AUTHOR where AUTHORID = @authorid)
+	declare @image varchar(30), @storyid_draft char(10) = @storyid
+	set @image = 'avatar_vio_' + CAST(FLOOR(RAND()*(20-1)+1) as varchar) + '.jpg'
+	insert STORY values(@storyid, @authorid, @editor, @storyname, 'ON GOING',0,'roman',@image)
+	insert DRAFT values(REPLACE(@storyid, 'ST', 'DR'), @authorid, @storyid_draft , @editor, @content, RAND()*(2000), 0)
+	select 'Created story successfully' AS 'RESULT'
+commit tran
+return 1
+
+select *from DRAFT where STORYID = 'ST109704367'
+select *from STORY where STORYID = 'ST6974576'
+--insert DRAFT values('DR100110', 'AU7922632 ', 'ST100110' , 'ED518373  ', 'xyz', 2000, 1500)
+delete DRAFT
+where DRAFTID = 'DR100110  '
+delete STORY
+where STORYID = 'ST100110'
+exec createStory 'AU7922632', 'ST100110', N'Tình Đ...ịch..ịch','abcxyz'
+
+update STORY
+set AVATAR = 'avatar_vio_5.jpg'
+where STORYID = 'ST100110'
+
+select *from STORY
+-------------------------update table chapter---------------------
+declare @i int = 0
+while @i < 30
+begin
+update CHAPTER
+set UNPAIR = (SELECT RAND()*(2000))
+where CHAPTERID = ( SELECT TOP 1 CHAPTERID FROM CHAPTER
+							ORDER BY NEWID())
+	set @i = @i+ 1
+end
+
+select *from AUTHOR
+---------------------create chapter-------------------------
+create
+--alter
+proc createChapter
+	@authorid char(10),
+	@storyid char(10),
+	@chapterid char(10),
+	@chaptername nchar(30),
+	@content ntext
+as
+begin tran
+	if not exists(select AUTHORID from AUTHOR where AUTHORID = @authorid)
+	begin
+		select 'Author is not exists' ERROR
+		rollback tran
+		return 0
+	end
+	if not exists(select STORYID from STORY where STORYID = @storyid)
+	begin
+		select 'Story is not exists' ERROR
+		rollback tran
+		return 0
+	end
+	if exists(select CHAPTERID from CHAPTER where CHAPTERID = @chapterid)
+	begin
+		select 'Chapter already exists' ERROR
+		rollback tran
+		return 0
+	end
+	if not exists(select *from OUTLINE where STORYID = @storyid)
+	begin
+		select 'Chapter has no outline' ERROR
+		rollback tran
+		return 0
+	end
+	declare @editor char(10) = (select EDITORID from AUTHOR where AUTHORID = @authorid)
+	declare @outline char(10) = (select top 1 OUTLINEID from OUTLINE where STORYID = @storyid)
+	declare @numofchap int = (select NUMOFCHAPS from STORY where STORYID = @storyid)
+	declare @gia float = (RAND()*(2000))
+
+	insert CHAPTER values(@chapterid, @editor,@outline, @storyid, @authorid,@chaptername,@gia, @content,@gia)
+	update STORY
+	set NUMOFCHAPS = NUMOFCHAPS + 1
+	where STORYID = @storyid
+	
+	select 'Created chapter successfully' AS 'RESULT'
+commit tran
+return 1
+
+exec createChapter 'AU7922632', 'ST346311', 'CT346311' ,'CHAP 1', 'abcxyz'
+update STORY
+set NUMOFCHAPS = NUMOFCHAPS - 1
+where STORYID =(SELECT STORYID FROM CHAPTER WHERE CHAPTERID  = 'CT346311' )
+delete CHAPTER
+where CHAPTERID = 'CT346311' 
+select *from STORY
+
+
+select *from OUTLINE where STORYID = 'ST999614  '
+select *from STORY where STORYID = 'ST346311'
+select *from CHAPTER where STORYID = 'ST346311  '
+---------------------------Create outline-----------------------------------------------
+create
+--alter
+proc createOutline
+	@authorid char(10),
+	@storyid char(10),
+	@outlineid char(10),
+	@content ntext
+as
+begin tran
+	if not exists(select AUTHORID from AUTHOR where AUTHORID = @authorid)
+	begin
+		select 'Author is not exists' ERROR
+		rollback tran
+		return 0
+	end
+	if not exists(select STORYID from STORY where STORYID = @storyid)
+	begin
+		select 'Story is not exists' ERROR
+		rollback tran
+		return 0
+	end
+	if exists(select STORYID from OUTLINE where STORYID = @storyid)
+	begin
+		select 'Story already has an outline' ERROR
+		rollback tran
+		return 0
+	end
+	if exists (select *from OUTLINE where OUTLINEID = @outlineid)
+	begin
+		select 'Outline alredy exists' ERROR
+		rollback tran
+		return 0
+	end
+	declare @editor char(10) = (select EDITORID from AUTHOR where AUTHORID = @authorid)
+	declare @gia float = (RAND()*(2000))
+
+	insert OUTLINE values(@outlineid, @authorid, @editor, @storyid, @content, @gia, @gia)
+	select 'Created outline successfully' AS 'RESULT'
+commit tran
+return 1
+
+exec createOutline 'AU7922632', 'ST10970447', '346311' , 'abcxyz'
+select *from STORY
+select *from OUTLINE where STORYID = 'ST10970447'
+delete OUTLINE
+where OUTLINEID = '346311  '
+
+select *from OUTLINE where STORYID = 'ST5653906 '
+select *from DRAFT where STORYID = 'ST5653906 '
+select *from CHAPTER where STORYID = 'ST5653906 '
+
+-------------------------------UPDATE DRAFT-------------------
+create
+--alter
+proc updateDraft
+  @id char(10),
+  @name nchar(30),
+  @content ntext
+as
+begin tran
+	if(left(@id,2) = 'DR')
+	begin 
+		-- check
+		if not exists (select *from DRAFT where DRAFTID = @id)
+		begin
+			select 'Draft is not exists' ERROR
+			rollback tran
+			return 0
+		end
+		--update name
+		if(@name is not null and len(@name) <> 0)
+		begin
+			update STORY
+			set STORYNAME  = @name
+			where STORYID = (select STORYID from DRAFT where DRAFTID = @id)
+		end
+		--update draft
+		if(@content is not null )
+		begin
+			update DRAFT
+			set CONTENT =  @content
+			where DRAFTID = @id
+		end
+	end
+	else
+	begin
+	--check
+		if not exists (select *from OUTLINE where OUTLINEID = @id)
+		begin
+			select 'Outline is not exists' ERROR
+			rollback tran
+			return 0
+		end
+		---update name
+		if(@name is not null and len(@name) <> 0)
+		begin
+			update STORY
+			set STORYNAME  = @name
+			where STORYID = (select STORYID from OUTLINE where OUTLINEID = @id)
+		end
+		--update outline
+		if(@content is not null )
+		begin
+			update OUTLINE
+			set CONTENT =  @content
+			where OUTLINEID = @id
+		end
+	end
+	select 'Update Story Successfully' RESULT
+commit tran
+return 1
+exec updateDraft 'DR10970447', N'Công Chúa Ngủ Ban Ngày', N'update truyện Công Chúa Ngủ Ban Ngày '
+select *from DRAFT where STORYID = 'ST10970447'
+select *from STORY where STORYID = 'ST5653906 '
+----------------Update Chapter-------------
+create 
+--alter
+proc updateChapter
+	@id char(10),
+	@name nchar(30),
+	@content ntext
+as
+begin tran
+	-- check
+	if not exists (select *from CHAPTER where CHAPTERID = @id)
+	begin
+		select 'Chapter is not exists' ERROR
+		rollback tran
+		return 0
+	end
+	--update name
+	if(@name is not null and len(@name) <> 0)
+	begin
+		update CHAPTER
+		set CHAPTERNAME  = @name
+		where CHAPTERID = @id
+	end
+	--update draft
+	if(@content is not null )
+	begin
+		update CHAPTER
+		set CONTENT =  @content
+		where CHAPTERID = @id
+	end
+	select 'Update Chapter Successfully' RESULT
+commit tran
+return 1
+exec updateChapter 'CT72513578',N'Đêm Thứ 1', null
+select *from CHAPTER

@@ -12,7 +12,7 @@ const OverviewStory = ({storyid, avt, name, process, approve, unpaid, paid}) => 
     async function click_(){
         localStorage.setItem('storyid',storyid)
         localStorage.setItem('avt',avt)
-        localStorage.setItem('name',name)
+        localStorage.setItem('name_content',name)
         localStorage.setItem('unpaid',unpaid)
         localStorage.setItem('paid',paid)
         localStorage.setItem('approve',approve)
@@ -27,8 +27,32 @@ const OverviewStory = ({storyid, avt, name, process, approve, unpaid, paid}) => 
             console.log("ERROR: " + data[0].ERROR)
         }
         else{ 
-            console.log("fetch dataaaaa:",data)
             localStorage.setItem('chapterdatalist',JSON.stringify(data)) 
+        }
+        // get draft
+        let url2 = "http://localhost:8080/author/getdraft/"
+        url2 = url2 + storyid 
+        const response_draft = await fetch(url2);
+        const data_draft = await response_draft.json();
+
+        if(Object.keys(data_draft[0]) == 'ERROR'){
+            localStorage.setItem('data_draft',JSON.stringify(data_draft[0])) 
+            alert("ERROR: " + data_draft[0].ERROR)
+        }
+        else{ 
+            localStorage.setItem('data_draft',JSON.stringify(data_draft[0])) 
+        }
+        //get outline
+        let url3 = "http://localhost:8080/author/getoutline/"
+        url3 = url3 + storyid 
+        const response_outline = await fetch(url3);
+        const data_outline = await response_outline.json();
+
+        if(Object.keys(data_outline[0]) == 'ERROR'){
+            localStorage.setItem('data_outline',null) 
+        }
+        else{ 
+            localStorage.setItem('data_outline',JSON.stringify(data_outline[0])) 
         }
         //await timeout(5000)
         // to detail page

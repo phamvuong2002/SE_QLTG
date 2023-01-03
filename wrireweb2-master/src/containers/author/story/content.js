@@ -1,8 +1,7 @@
 import React from 'react'
 
-const Content = () => {
-  const [message, setMessage] = React.useState('');
-
+const Content = ({detail_content}) => {
+  const [message, setMessage] = React.useState(detail_content);
   const handleMessageChange = event => {
     // 👇️ access textarea value
     setMessage(event.target.value);

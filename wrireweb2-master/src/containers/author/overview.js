@@ -17,7 +17,7 @@ async function connectfetch(){
     const response = await fetch(url);
     const data = await response.json();
     
-    if(Object.keys(data[0]) === 'ERROR'){
+    if(Object.keys(data[0]) == 'ERROR'){
         alert("ERROR: " + data[0].ERROR)
     }
     else{   
