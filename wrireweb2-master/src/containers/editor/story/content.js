@@ -1,10 +1,9 @@
 import React from 'react'
 
-const Content = () => {
-  const [message, setMessage] = React.useState('');
-
+const Content = ({detail_content}) => {
+  const [message, setMessage] = React.useState(detail_content);
+  
   const handleMessageChange = event => {
-    
     setMessage(event.target.value);
     localStorage.setItem('content', event.target.value);
     console.log(event.target.value);

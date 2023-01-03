@@ -14,6 +14,7 @@ const OverviewStoryList = ({storyData}) => {
         unpaid={data.unpaid}
         paid={data.paid}
         authorname={data.authorname}    
+        authorid={data.authorid}    
         />
         ))}
     </div>
