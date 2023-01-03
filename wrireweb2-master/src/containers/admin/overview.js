@@ -3,9 +3,9 @@ import Create_Account from './account/createAcc';
 import { useNavigate } from 'react-router-dom';
 import Account from './account';
 const adminid = 'AD342720'; //update later
-const PersonName  = "Web lol"; // get from login page
+const admin_PersonName  = "Web lol"; // get from login page
 //const authorid = "AU7947660"
-localStorage.setItem('PersonName', PersonName);
+localStorage.setItem('admin_PersonName', admin_PersonName);
 localStorage.setItem('adminid', JSON.stringify(adminid));
 
 const Overview = () => {

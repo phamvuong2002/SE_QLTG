@@ -2,45 +2,35 @@ import React from 'react'
 
 import Content from './content'
 
+import Dialog from "@material-ui/core/Dialog";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import Button from "@material-ui/core/Button";
+
 const Read = () => {
+  var content =  localStorage.getItem('reading_content')
+  var name =  localStorage.getItem('reading_name')
+  var type = localStorage.getItem('reading_type')
+
   return (
-  <div className='flex-col w-[800px] h-fit'>
+  <div className='flex-col w-fit h-fit '>
     
     <div className='flex items-center'>
 
-      <div className='mx-[200px] w-full'>
+      <div className='mx-[150px] w-full'>
         <div className='text-[36px] text-center w-full bg-transparent'>
-          Chapter 1
+          {type}: {name}
         </div>
-        <div className='text-[16px] w-full text-center'>Chapter</div>
       </div>
-      
-      {/* <div className='bg-[#13A846] rounded-[100px] px-[14px] mx-[10px] w-[100px] h-[60px] '>
-        <button className='text-[#ffffff] text-[15px]'   onClick={() => {}}>
-                Add Comment
-        </button>
-      </div>  */}
-
     </div>
-
-
-    <Content/>
-
-    {/* <div className='flex place-content-center w-full h-fit mt-[10px] mx-[200px]'>
-      <div className='bg-[#6731DC] rounded-[100px] px-[14px] py-[2px] mx-[10px]'>
-        <button className='mx-3 text-[#ffffff]'  onClick={() => {}}>
-                Approve
-        </button>
-      </div>   
-      <div className='bg-[#6731DC] rounded-[100px] px-[14px] py-[2px] mx-[10px]'>
-        <button className='mx-3 text-[#ffffff]'  onClick={() => {}}>
-                Decline
-        </button>
-      </div>   
-    </div> */}
-
+    <div className='flex w-full'>
+      <Content detail_content={content}/>
+      {/* <div className='bg-[#fff] w-[160px] h-fit rounded-lg ml-[10px] shadow-sm border-[2px]'>{cmt}</div> */}
+    </div>
   </div>
   )
 }
-
 export default Read
+

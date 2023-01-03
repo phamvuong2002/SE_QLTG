@@ -28,7 +28,7 @@ const DetailStory_au = () => {
     let Outline_stt = JSON.parse(localStorage.getItem('data_outline'))
     let outlinetab
     if(Outline_stt !== null){
-        outlinetab = <OverviewDraft_Outline id = {Outline_stt.id} content={Outline_stt.content} name={'Outline'} paid_stt= {Outline_stt.paid_stt} stt={Outline_stt.stt} />
+        outlinetab = <OverviewDraft_Outline id = {Outline_stt.id} content={Outline_stt.content} name={'Outline'} paid_stt= {Outline_stt.paid_stt} stt={Outline_stt.stt} storyname={name_content}/>
     }
    
     const navigate = useNavigate()
@@ -123,7 +123,7 @@ const DetailStory_au = () => {
                 <div className='items-center px-5 my-[20px] bg-white font-bold border-t'>
                     Story
                 </div>
-                <OverviewDraft_Outline id ={Draft_stt.id} content={Draft_stt.content} name={'Draft'} paid_stt={Draft_stt.paid_stt} stt={Draft_stt.stt} />
+                <OverviewDraft_Outline id ={Draft_stt.id} content={Draft_stt.content} name={'Draft'} paid_stt={Draft_stt.paid_stt} stt={Draft_stt.stt} storyname={name_content}/>
                 {/* <OverviewDraft_Outline name={'Outline'} id ={Outline_stt.id} content={Outline_stt.content} paid_stt={Outline_stt.paid_stt} stt={Outline_stt.stt} /> */}
                 {outlinetab}
                 <div className='items-center px-5 h-[60px] bg-white border-t py-[10px] font-semibold'>

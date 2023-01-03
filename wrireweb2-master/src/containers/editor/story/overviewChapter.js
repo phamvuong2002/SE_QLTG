@@ -28,10 +28,10 @@ const OverviewChapter = ({chapterid,name, paid_stt, stt,content}) => {
         // localStorage.setItem('editor_comment',data[0].cmt) 
         console.log("ERROR: " + data[0].ERROR)
       }
-      else if(data[0] === undefined){
-        // data[0] = jsonObject
-        localStorage.setItem('editor_comment',JSON.stringify(jsonObject).cmt ) 
-      }
+      // else if(data[0] === undefined){
+      //   // data[0] = jsonObject
+      //   localStorage.setItem('editor_comment',JSON.stringify(jsonObject).cmt ) 
+      // }
       else{ 
           localStorage.setItem('editor_comment',data[0].cmt) 
       }

@@ -6,12 +6,12 @@ import { useNavigate } from 'react-router-dom';
 const paid = 'bg-[#29CC97] rounded-[20px] px-[24px] py-[2px] mx-3 text-[#ffffff]';
 const not_paid = 'bg-[#F12B2C] rounded-[20px] px-[24px] py-[2px] mx-3 text-[#ffffff]';
 
-const OverviewDraft_Outline = ({id, content, name, paid_stt, stt}) => {
+const OverviewDraft_Outline = ({id, content, name, paid_stt, stt, storyname}) => {
   const navigate = useNavigate()
   function click_() {
-    localStorage.setItem('TYPE', 'DETAILDRAFT');
-    localStorage.setItem('draft_ouline_id', id);
-    localStorage.setItem('draft_ouline_content', content);
+    localStorage.setItem('reading_name', storyname)
+    localStorage.setItem('reading_type', name)
+    localStorage.setItem('reading_content', content)
     navigate('/story/read');
     window.location.reload();
   }
