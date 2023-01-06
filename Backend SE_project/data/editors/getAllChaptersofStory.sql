@@ -1,1 +1,1 @@
-exec [dbo].[getAllChaptersofStory] @storyid
+exec [dbo].[editor_getAllChaptersofStory] @storyid

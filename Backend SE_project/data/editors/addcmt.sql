@@ -1,1 +1,1 @@
-EXEC addComment @cmtid, @chapterid ,@editorid ,@content 
+EXEC [dbo].[addComment] @cmtid, @chapterid ,@editorid ,@content 

@@ -81,12 +81,13 @@ const getAllChaptersofStory = async(storyid) => {
     }
 }
 
-const getComment = async(ChapterId) => {
+const getComment = async(data) => {
     try {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await utils.loadSqlQueries('editors');
         const list = await pool.request()
-                            .input('chapterid', sql.Char(10), ChapterId)
+                            .input('chapterid', sql.Char(10), data.chapterid)
+                            .input('editorid', sql.Char(10), data.editorid)
                             .query(sqlQueries.getcmt);
         return list.recordset;
     } catch (error) {

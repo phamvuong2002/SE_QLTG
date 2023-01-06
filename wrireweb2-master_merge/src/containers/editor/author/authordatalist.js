@@ -1,6 +1,6 @@
 // import { eren } from "../../../assets";
 
-const editorid = localStorage.getItem("editorid");
+let editorid = localStorage.getItem("editorid"); //from overview
 let authordatalist = []
 async function connectfetch(){
     let url = "http://localhost:8080/editor/overviewAuthorList/"

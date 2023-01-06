@@ -7,7 +7,6 @@ let editorid = 'ED841430'; // get from login page
 editorid = localStorage.getItem('id_login')
 localStorage.setItem('editorid', editorid)
 
-
 let dataeditor = {
     "numstory": "",
     "numchap": "",

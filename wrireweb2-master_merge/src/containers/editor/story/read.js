@@ -44,8 +44,8 @@ const Read = () => {
   var content =  localStorage.getItem('chapter_content')
   var cmt = localStorage.getItem('editor_comment') 
   const [open, setOpen] = React.useState(false);
+
   async function approveBtn() {
-    // --------------Create CMT------------------
       // get comment
       let url = "http://localhost:8080/editor/approvebtn/"
       url = url + chapterid 
@@ -58,24 +58,20 @@ const Read = () => {
       else{ 
         alert("UPDATE SUCCESSFULLY")
       }
-      //remove items
-      // localStorage.removeItem('content')
-    
   };
   
   async function addComment() {
     // --------------Create CMT------------------
-    
+      let content_cmt = document.getElementById('content').value
       //create json object 
       let jsonObject = {
         "cmtid": cmtid,
         "chapterid": chapterid.replace(/\s/g, ''),
         "editorid": editorid.replace(/\s/g, ''),
-        "content": content,
+        "content": content_cmt,
       }
-      console.log(JSON.stringify(jsonObject))
       let url = "http://localhost:8080/editor/addcomment"
-      // fetch the story
+      
       const response = await fetch(url, {
         method: "POST",
         body: JSON.stringify(jsonObject),
@@ -97,7 +93,7 @@ const Read = () => {
       }
       //remove items
       // localStorage.removeItem('content')
-    
+      
   };
   
   const handleClickToOpen = () => {
@@ -108,7 +104,6 @@ const Read = () => {
     setOpen(false);
   };
 
-  alert('new' + content)
   return (
     
   <div className='flex-col w-fit h-fit '>

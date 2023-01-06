@@ -65,8 +65,8 @@ const getAllChaptersofStory = async (req, res, next) => {
 
 const getComment = async (req, res, next) => {
     try {
-        const chapterid = req.params.id;
-        const value = await EditorsData.getComment(chapterid);
+        const data = req.body;
+        const value = await EditorsData.getComment(data);
         res.send(value);
     } catch (error) {
         res.status(400).send(error.message);
