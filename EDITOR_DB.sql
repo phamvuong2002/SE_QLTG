@@ -66,7 +66,7 @@ begin
 end
 go
 exec selectAuthorList 'ED841430  '
-
+select *from EDITOR where EDITORID  = 'ED841430'
 ------- OVERVIEW STORY DATA LIST (find by AUTHORID) IN AUTHOR TAB -------------------
 create 
 --alter
@@ -91,7 +91,7 @@ begin
 end
 GO
 exec author_storydatalist 'AU3639829'
-
+select *from AUTHOR 
 
 ------- OVERVIEW STORY DATA LIST (find by Editor ID) IN STORY TAB -------------------
 create 
@@ -124,7 +124,7 @@ select * from CHAPTER
 -------------------- DETAIL STORY (SHOW CHAPTER)-----------
 CREATE
 --alter
-proc getAllChaptersofStory
+proc editor_getAllChaptersofStory
 	@storyid char(10)
 as
 begin
@@ -144,10 +144,10 @@ begin
 	
 end
 GO
-exec getAllChaptersofStory 'ST690542  '
+exec editor_getAllChaptersofStory 'ST690542  '
 select * from COMMENT
 select * from CHAPTER
-
+select *from EDITOR
 ---------------------------GET ALL COMMENT------------
 CREATE
 --alter
@@ -219,7 +219,6 @@ begin
 	if exists (select * from COMMENT where COMMENTID = @cmtid)
 	begin
 		select 'COMMENT HAS ALREADY EXISTS' AS ERROR
-		
 		return 0
 	end
 	
@@ -232,12 +231,13 @@ begin
 	if exists (select * from COMMENT where CHAPTERID = @chapterid)
 	begin
 		update COMMENT SET CONTENT = @content WHERE CHAPTERID = @chapterid
+		select 'Created CMT successfully' AS 'RESULT'
+		return 0
 	end
 
 	if not exists(select * from EDITOR where EDITORID = @editorid)
 	begin
 		select 'EDITOR NOT EXISTS' AS ERROR
-	
 		return 0
 	end
 	
@@ -246,11 +246,12 @@ begin
 end
 go
 EXEC addComment 'CCCCC', 'CCCCC', 'CCCCC', 'CCCCCCCCCCC'
-select * from COMMENT
+select * from COMMENT WHERE CONTENT like 'aaa'
 
 DELETE COMMENT WHERE CONTENT like 'aaa'
 select * from chapter
-
+select *from AUTHOR where EDITORID = 'ED536554'
+select *from CHAPTER where EDITORID = 'ED295770  '
 -----------APPROVE BUTTON (to update paid/unpaid)---------
 create 
 --alter

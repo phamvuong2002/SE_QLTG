@@ -212,7 +212,7 @@ begin
 	end
 	declare @name varchar(30), @unpaid float, @editorid char(10), @paid_stt varchar(10) = 'Paid', @stt varchar(10) = 'unchecked'
 	select CHAPTERNAME name, Convert(varchar, Case When UNPAIR > 0 Then 'UnPaid' Else 'Paid' End) As paid_stt, 
-			Convert(varchar, Case When EDITORID is null Then 'UnChecked' Else 'Checked' End) As stt,
+			Convert(varchar, Case When UNPAIR = -1 Then 'UnChecked' Else 'Checked' End) As stt,
 			CONTENT content, CHAPTERID id
 			from CHAPTER where STORYID = @storyid
 	

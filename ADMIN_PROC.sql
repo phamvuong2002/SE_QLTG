@@ -20,12 +20,15 @@ END
 GO
 
 --EXEC USP_getAdminOverview @adminid = 'AD342720  '
---SELECT * FROM AUTHOR WHERE ADMINID = 'AD342720  '
+select *from ADMIN where ADMINID = 'AD342720'
+--SELECT * FROM AUTHOR WHERE ADMINID = 'AD808006    '
 --SELECT * FROM STORY WHERE AUTHORID = 'AU0886539 '
 --SELECT * FROM STORY WHERE AUTHORID = 'AU2024405 ' 
 --SELECT * FROM STORY WHERE AUTHORID = 'AU2563038 '
 --SELECT * FROM STORY WHERE AUTHORID = 'AU2671764 '
 --SELECT * FROM STORY WHERE AUTHORID = 'AU4101314 '
+select *from STORY where STORYNAME = 'Adnipedgan'
+select *from CHAPTER where STORYID = 'ST711850  '
 
 ----------------------------2----------------------------
 DROP PROC IF EXISTS USP_getAllAccounts 
@@ -79,7 +82,7 @@ END
 GO
 
 --SELECT * FROM AUTHOR WHERE AUTHORID IN (SELECT AUTHORID FROM @T) 
---EXEC USP_getAllEditors @adminid = 'AD342720'
+--EXEC USP_getAllAuthors @adminid = 'AD342720'
 --SELECT * FROM EDITOR WHERE ADMINID = 'AD342720' 
 --select * from story where EDITORID = 'ED779066' or EDITORID = 'ED949502'
 
@@ -173,7 +176,8 @@ BEGIN
 	SELECT 'ADDING ADMIN SUCCESSFULLY' AS '1'
 END
 GO
-
+select *from ADMIN
+select *from EDITOR
 ----------------------------7----------------------------
 DROP PROC IF EXISTS USP_createAuthor
 GO
@@ -184,22 +188,43 @@ PROC USP_createAuthor
 	@authorid CHAR(10),
 	@adminid CHAR(10),
 	@username CHAR(20),
-	@password CHAR(15)
+	@password CHAR(15),
+	@authorname nchar(50),
+	@email char(30),
+	@phonenumber char(15)
 AS
-BEGIN
+BEGIN Tran
+	if not exists( select ADMINID from ADMIN where ADMINID = @adminid )
+	BEGIN
+		SELECT 'ADMIN IS NOT EXISTED' AS 'ERROR'
+		ROLLBACK TRAN
+		RETURN 0
+	END
 	IF EXISTS (SELECT AUTHORID FROM AUTHOR WHERE TRIM(AUTHORID) = TRIM(@authorid))
-		BEGIN
-			SELECT 'ID IS EXISTED' AS 'ERROR'
-			ROLLBACK TRAN
-			RETURN 0
-		END
-
-	INSERT AUTHOR (AUTHORID, ADMINID, PASSWORD, USERNAME, AVATAR) 
-	VALUES (@authorid, @adminid, @password, @username, 'empty.png')
+	BEGIN
+		SELECT 'ID IS EXISTED' AS 'ERROR'
+		ROLLBACK TRAN
+		RETURN 0
+	END
+	if exists (select *from AUTHOR where USERNAME = @username)
+	BEGIN
+		SELECT 'Username already exists' AS 'ERROR'
+		ROLLBACK TRAN
+		RETURN 0
+	END
+	declare @editorid char(10) = (SELECT TOP 1 EDITORID FROM EDITOR  ORDER BY NEWID())
+	declare @image varchar(50) = ('avatar_vio_' + Cast(FLOOR(RAND()*(20 - 1) + 1) as varchar) + '.jpg')
+	
+	INSERT AUTHOR VALUES (@authorid, @adminid, @editorid, @password, @authorname, @email,
+	'address', @phonenumber, @username, 0, @image)
 	SELECT 'ADDING AUTHOR SUCCESSFULLY' AS '1'
-END
+COMMIT TRAN
 GO
-
+exec USP_createAuthor 'AU20022002','AD808006','vuong1001','123456789',N'Phạm Vương',
+'pvuong@gmail.com','0948908485'
+select *from AUTHOR where AUTHORID = 'AU20022002'
+delete AUTHOR where AUTHORID = 'AU20022002'
+select *from AUTHOR
 ----------------------------8----------------------------
 DROP PROC IF EXISTS USP_createEditor
 GO
@@ -301,8 +326,7 @@ end
 go
 
 ----------------------------12----------------------------
-drop proc if exists getAllChaptersofStory
-go
+
 
 CREATE
 --alter
