@@ -216,7 +216,7 @@ proc addComment
 	@content ntext
 as
 begin
-	if exists (select * from COMMENT where COMMENTID = @cmtid)
+	if not exists (select * from COMMENT where COMMENTID = @cmtid)
 	begin
 		select 'COMMENT HAS ALREADY EXISTS' AS ERROR
 		return 0
@@ -232,6 +232,7 @@ begin
 	begin
 		update COMMENT SET CONTENT = @content WHERE CHAPTERID = @chapterid
 		select 'Created CMT successfully' AS 'RESULT'
+		--SELECT * FROM COMMENT WHERE CHAPTERID = @chapterid
 		return 0
 	end
 
@@ -271,6 +272,9 @@ EXEC updateUnpaidPaid 'CH00mcu55'
 --CH72qwt70 
 
 update CHAPTER set UNPAIR = 865.77637338836 where CHAPTERID = 'CH00mcu55 '
+
+
+select * from EDITOR
 
 
 
