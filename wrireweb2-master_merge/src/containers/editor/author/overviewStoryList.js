@@ -2,6 +2,7 @@ import React from 'react'
 import OverviewStory from './overviewStory'
 
 const OverviewStoryList = ({storyData}) => {
+  // alert('where r u?'+ JSON.stringify(storyData))
   return (
     <div className='py-1 overflow-y-scroll h-[500px]'>
         {storyData.map((data) => (

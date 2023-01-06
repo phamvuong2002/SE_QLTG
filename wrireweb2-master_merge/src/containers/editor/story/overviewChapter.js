@@ -19,7 +19,7 @@ const OverviewChapter = ({chapterid,name, paid_stt, stt,content}) => {
       let editorid = localStorage.getItem('editorid')
 
       let jsonObject = {
-        "chapterid": chapterid,
+        "chapterid": chapterid.replace(/\s/g, ''),
         "editorid": editorid.replace(/\s/g, '')
       }
       // get comment
@@ -34,19 +34,26 @@ const OverviewChapter = ({chapterid,name, paid_stt, stt,content}) => {
       });
       //return update results 
       const json = await response.json();
-      console.log(json);
-      //check error 
-      let keys = Object.keys(json[0])
-      if (keys[0] === "ERROR") {
-        let data = JSON.stringify(json[0].ERROR)
-        console.log("ERROR: " + data[0].ERROR)
+      //check chapter have no comment
+      if(json.length === 0){
+        let jsonCMT = {
+          "cmt": "No comment now",
+        }
+        localStorage.setItem('editor_comment', jsonCMT.cmt)
+        console.log(jsonCMT.cmt)
+      } else{
+        let keys = Object.keys(json[0])
+        //check error 
+        if (keys[0] === "ERROR") {
+          console.log("ERROR: " + JSON.stringify(json[0].ERROR))
+        }
+        else {
+          localStorage.setItem('editor_comment', json[0].cmt) 
+        }
       }
-      else {
-        localStorage.setItem('editor_comment', json[0].cmt) 
-      }
+      
       navigate('/story/read')
       window.location.reload()
-      
   }
   return (
     <div className='flex h-[60px] border-t items-center' onClick={() => click_()}>

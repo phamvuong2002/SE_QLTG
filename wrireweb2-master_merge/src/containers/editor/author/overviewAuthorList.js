@@ -2,6 +2,7 @@ import React from 'react'
 import OverviewAuthor from './overviewAuthor'
 
 const OverviewAuthorList = ({authorData}) => {
+  
   return (
     
     <div className='py-1'>
