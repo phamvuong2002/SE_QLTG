@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const AuthorsRoutes = require('./routes/AuthorsRoutes');
 const EditorsRoutes = require('./routes/EditorsRoutes');
 const AdminsRoutes = require('./routes/AdminsRoutes');
+const LoginRoutes = require('./routes/LoginRoutes');
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(bodyParser.json());
 app.use('/author', AuthorsRoutes.routes);
 app.use('/editor', EditorsRoutes.routes);
 app.use('/admin', AdminsRoutes.routes);
+app.use('/account',LoginRoutes.routes);
 
 
 app.listen(config.port, () => {

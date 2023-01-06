@@ -131,7 +131,10 @@ const createAuthor = async (data) => {
                             .input('adminid', sql.Char(10), data.adminid)
                             .input('username', sql.Char(20), data.username)
                             .input('password', sql.Char(15), data.password)
-                            .query(sqlQueries.createadmin);
+                            .input('authorname', sql.NChar(50), data.authorname)
+                            .input('email', sql.Char(30), data.email)
+                            .input('phonenumber', sql.Char(15), data.phonenumber)
+                            .query(sqlQueries.createauthor);
         return insert.recordset;
     } catch (error) {
         return error.message;
