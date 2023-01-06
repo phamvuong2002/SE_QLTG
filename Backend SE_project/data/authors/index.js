@@ -114,9 +114,9 @@ const createOutline = async(data) => {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await utils.loadSqlQueries('authors');
         const insert = await pool.request()
-                            .input('storyid', sql.Char(10), data.storyid)
-                            .input('authorid', sql.Char(10), data.authorid)
-                            .input('outlineid', sql.Char(10), data.outlineid)
+                            .input('storyid', sql.VarChar(10), data.storyid)
+                            .input('authorid', sql.VarChar(10), data.authorid)
+                            .input('outlineid', sql.VarChar(10), data.outlineid)
                             .input('content', sql.NText, data.content)
                             .query(sqlQueries.createoutline);
         return insert.recordset;
