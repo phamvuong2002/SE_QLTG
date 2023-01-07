@@ -10,9 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import Read from '../story/read'
 
 const DetailAuthor = () => {
-
-    const navigate = useNavigate()
-
+  const navigate = useNavigate()
   return (
     <div className='flex-col w-fit h-fit bg-[#F7F8FC] ml-[70px]'>
       

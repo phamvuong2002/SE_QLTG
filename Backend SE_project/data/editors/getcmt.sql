@@ -1,1 +1,1 @@
-exec [dbo].[showComment] @chapterid
+exec [dbo].[showComment] @chapterid, @editorid

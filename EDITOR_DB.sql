@@ -67,6 +67,8 @@ end
 go
 exec selectAuthorList 'ED841430  '
 select *from EDITOR where EDITORID  = 'ED841430'
+
+
 ------- OVERVIEW STORY DATA LIST (find by AUTHORID) IN AUTHOR TAB -------------------
 create 
 --alter
@@ -82,11 +84,13 @@ begin
 
 	select STORYID AS storyid, 
 			STORYNAME AS name, 
-			AVATAR AS avt,
+			A.AVATAR AS avt,
 			STATE AS process, 
-			NUMOFCHAPS AS approve 
-	from STORY
-	where AUTHORID = @authorid
+			NUMOFCHAPS AS approve, 
+			AUTHORNAME as authorname,
+			A.AUTHORID as authorid
+	from STORY S join AUTHOR A on A.AUTHORID = S.AUTHORID
+	where A.AUTHORID = @authorid
 	
 end
 GO
@@ -152,7 +156,8 @@ select *from EDITOR
 CREATE
 --alter
 proc showComment
-	@chapterid char(10)
+	@chapterid char(10),
+	@editorid char(10)
 as
 begin
 	if NOT EXISTS (select * from COMMENT where CHAPTERID = @chapterid)
@@ -163,14 +168,11 @@ begin
 	
 	select CONTENT as cmt
 	from COMMENT
-	where CHAPTERID = @chapterid
+	where CHAPTERID = @chapterid and EDITORID = @editorid
 	
 end
 GO
-exec showComment 'CH00mcu55'
---CH00mcu55 
---CH59hfs76 
---CH72qwt70 
+exec showComment 'CH59qpq98 ' ,'ED536554  '
 
 ---------------------------Cal Pair Unpair Story-------------------------
 create 
@@ -216,23 +218,9 @@ proc addComment
 	@content ntext
 as
 begin
-	if not exists (select * from COMMENT where COMMENTID = @cmtid)
-	begin
-		select 'COMMENT HAS ALREADY EXISTS' AS ERROR
-		return 0
-	end
-	
 	if not exists (select * from CHAPTER where CHAPTERID = @chapterid)
 	begin
 		select 'CHAPTER NOT EXISTS' AS ERROR
-		return 0
-	end
-
-	if exists (select * from COMMENT where CHAPTERID = @chapterid)
-	begin
-		update COMMENT SET CONTENT = @content WHERE CHAPTERID = @chapterid
-		select 'Created CMT successfully' AS 'RESULT'
-		--SELECT * FROM COMMENT WHERE CHAPTERID = @chapterid
 		return 0
 	end
 
@@ -241,18 +229,34 @@ begin
 		select 'EDITOR NOT EXISTS' AS ERROR
 		return 0
 	end
-	
+
+
+	if exists (select * from COMMENT where CHAPTERID = @chapterid and EDITORID = @editorid)
+	begin
+		update COMMENT SET CONTENT = @content WHERE CHAPTERID = @chapterid and EDITORID = @editorid
+		select 'update CMT successfully' AS 'RESULT'
+		--SELECT * FROM COMMENT WHERE CHAPTERID = @chapterid and EDITORID = @editorid
+		return 0
+	end
+
 	INSERT COMMENT VALUES(@cmtid ,@chapterid ,@editorid ,@content )
 	select 'Created CMT successfully' AS 'RESULT'
+	--SELECT * FROM COMMENT WHERE CHAPTERID = @chapterid and EDITORID = @editorid
 end
 go
-EXEC addComment 'CCCCC', 'CCCCC', 'CCCCC', 'CCCCCCCCCCC'
-select * from COMMENT WHERE CONTENT like 'aaa'
+--EXEC addComment 'CM798683  ', 'CH00mcu55 ', 'ED518373  ', 'ffff'
+--select * from COMMENT WHERE CONTENT like 'aaa'
+select * from COMMENT where CHAPTERID = 'CH59qpq98 '
 
 DELETE COMMENT WHERE CONTENT like 'aaa'
 select * from chapter
 select *from AUTHOR where EDITORID = 'ED536554'
-select *from CHAPTER where EDITORID = 'ED295770  '
+select *from CHAPTER where EDITORID = 'ED295770  ' 
+select * from chapter where CHAPTERID = 'CH59qpq98 '
+
+
+select * from EDITOR
+
 -----------APPROVE BUTTON (to update paid/unpaid)---------
 create 
 --alter
@@ -270,11 +274,13 @@ EXEC updateUnpaidPaid 'CH00mcu55'
 --CH00mcu55 
 --CH59hfs76 
 --CH72qwt70 
+select * from CHAPTER where CHAPTERNAME like 'Tuprobexover 8                '
+update CHAPTER set UNPAIR = 56.77637338836 where CHAPTERID = 'CH59qpq98 '
+update CHAPTER set UNPAIR = 360.56808899391 where CHAPTERID = 'CH90jjh45 '
 
-update CHAPTER set UNPAIR = 865.77637338836 where CHAPTERID = 'CH00mcu55 '
 
 
-select * from EDITOR
+
 
 
 

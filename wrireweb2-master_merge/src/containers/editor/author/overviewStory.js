@@ -2,16 +2,18 @@ import React from 'react'
 // import { no_god } from '../../../assets'
 import { useNavigate } from 'react-router-dom'
 
-const OverviewStory = ({storyid, avt, name, process, approve, unpaid, paid}) => {
+const OverviewStory = ({storyid, avt, name, process, approve, unpaid, paid, authorname, authorid}) => {
 
     const navigate = useNavigate()
     const HandleClick = async () => {
-        localStorage.setItem('editor_storyid',storyid)
-        localStorage.setItem('editor_avt',avt)
-        localStorage.setItem('editor_name',name)
+        localStorage.setItem('editor_storyid',storyid.replace(/\s/g, ''))
+        localStorage.setItem('editor_avt',avt.replace(/\s/g, ''))
+        localStorage.setItem('editor_name',name.replace(/\s/g, ''))
         localStorage.setItem('editor_unpaid',unpaid)
         localStorage.setItem('editor_paid',paid)
         localStorage.setItem('editor_approve',approve)
+        localStorage.setItem('editor_authorname',authorname.replace(/\s/g, ''))
+        localStorage.setItem('editor_authoridd',authorid.replace(/\s/g, ''))
         // get chapters
         let url = "http://localhost:8080/editor/getallchapterofstory/"
         url = url + storyid 
@@ -31,7 +33,7 @@ const OverviewStory = ({storyid, avt, name, process, approve, unpaid, paid}) => 
         //reload to update page
         window.location.reload()
 }
-    let avatar_story = require("../../../assets/" + avt)
+    let avatar_story = require("../../../assets/" + avt.replace(/\s/g, ''))
     
   return (
     <div className='flex items-center w-full bg-white px-20 py-[20px] border-t-2 border-[#DFE0EB] my-2' onClick={() => HandleClick()}>

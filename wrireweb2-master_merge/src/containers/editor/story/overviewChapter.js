@@ -15,20 +15,45 @@ const OverviewChapter = ({chapterid,name, paid_stt, stt,content}) => {
       
       localStorage.setItem('chapterid', chapterid)
       localStorage.setItem('chapter_content', content)
-
-      // get comment
-      let url = "http://localhost:8080/editor/getcomment/"
-      url = url + chapterid 
-      const response = await fetch(url);
-      const data = await response.json();
       
-      if(Object.keys(data[0]) === 'ERROR'){
-        // localStorage.setItem('editor_comment',data[0].cmt) 
-        console.log("ERROR: " + data[0].ERROR)
-      }else{ 
-          localStorage.setItem('editor_comment',data[0].cmt) 
+      let editorid = localStorage.getItem('editorid')
+
+      let jsonObject = {
+        "chapterid": chapterid.replace(/\s/g, ''),
+        "editorid": editorid.replace(/\s/g, '')
       }
+      // get comment
+
+      let url = "http://localhost:8080/editor/getcomment/"
+      const response = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(jsonObject),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      //return update results 
+      const json = await response.json();
+      //check chapter have no comment
+      if(json.length === 0){
+        let jsonCMT = {
+          "cmt": "No comment now",
+        }
+        localStorage.setItem('editor_comment', jsonCMT.cmt)
+        console.log(jsonCMT.cmt)
+      } else{
+        let keys = Object.keys(json[0])
+        //check error 
+        if (keys[0] === "ERROR") {
+          console.log("ERROR: " + JSON.stringify(json[0].ERROR))
+        }
+        else {
+          localStorage.setItem('editor_comment', json[0].cmt) 
+        }
+      }
+      
       navigate('/story/read')
+      window.location.reload()
   }
   return (
     <div className='flex h-[60px] border-t items-center' onClick={() => click_()}>

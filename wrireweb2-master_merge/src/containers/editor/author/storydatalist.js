@@ -1,4 +1,4 @@
-const authorid = localStorage.getItem("editor_authorid");
+const authorid = localStorage.getItem("editor_authorid"); //get from overview author
 
 let storydatalist = []
 async function connectfetch(){
