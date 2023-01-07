@@ -152,7 +152,20 @@ const updateChapter = async(data) => {
         return error.message;
     }
 }
+
+const getCmtChapter = async(ChapterID) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await utils.loadSqlQueries('authors');
+        const cmt = await pool.request()
+                            .input('chapterid', sql.Char(10), ChapterID)
+                            .query(sqlQueries.getcmt);
+        return cmt.recordset;
+    } catch (error) {
+        return error.message;
+    }
+}
 module.exports = {
     countStory, storyDatalist, calPairUnpairStory, getAllChaptersofStory, createStory, createChapter,
-    createOutline, getDraft, getOutline, updateStory, updateChapter
+    createOutline, getDraft, getOutline, updateStory, updateChapter, getCmtChapter
 }

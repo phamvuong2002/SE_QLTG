@@ -1,0 +1,159 @@
+import React from 'react'
+import OverviewChapterList from './overviewChapterList' 
+import OverviewDraft_Outline from './overviewDraft_Outline'
+
+//import { chapterdatalist } from './chapterdatalist'
+
+import { json, useNavigate } from 'react-router-dom'
+
+import Write from './write'
+
+let chapterdatalist = []
+
+const authorname = localStorage.getItem('name_login')
+const storyid = localStorage.getItem('storyid')
+const avt = localStorage.getItem('avt')
+const name_content = localStorage.getItem('name_content')
+const unpaid = localStorage.getItem('unpaid')
+const paid = localStorage.getItem('paid')
+const approve = localStorage.getItem('approve')
+
+
+const DetailStory_au = () => {
+    //get chapters, draft and ouline data 
+    chapterdatalist = JSON.parse(localStorage.getItem('chapterdatalist'))
+    let Draft_stt = JSON.parse(localStorage.getItem('data_draft'))
+    let Outline_stt = JSON.parse(localStorage.getItem('data_outline'))
+    let outlinetab
+    let chapterlist_tap
+    if(Outline_stt !== null){
+        outlinetab = <OverviewDraft_Outline id = {Outline_stt.id} content={Outline_stt.content} name={'Outline'} paid_stt= {Outline_stt.paid_stt} stt={Outline_stt.stt} />
+    }
+    // if(JSON.stringify(Object.keys(chapterdatalist[0])) === "[ERROR]")
+    // {
+    //     alert(JSON.stringify(Object.keys(chapterdatalist[0])))
+    // }
+    
+    if(chapterdatalist !== null){
+        chapterlist_tap = <OverviewChapterList chapterData={chapterdatalist} />
+    }
+    
+   
+    const navigate = useNavigate()
+    function click_chapter() {
+        if(Outline_stt !== null){
+            localStorage.setItem('TYPE', 'CHAPTER')
+            navigate('/story/write')
+        }
+        else{
+            alert('You must create a outline before creating a chapter')
+            window.location.reload()
+        }
+        
+    }
+    function click_outline() {
+        if(Outline_stt !== null){
+            alert("A Story has only one outline \n You have already outline!!!")
+            return
+        }
+        localStorage.setItem('TYPE', 'OUTLINE')
+        navigate('/story/write')
+    }
+
+    let image = require('../../../assets/' + avt)
+    return (
+        <div className='bg-[#ffffff] w-[1122px] h-[657px] shadow-2xl rounded-lg border border-[#DFE0EB] ml-[70px]'>
+            <div className='flex h-[180px]'>
+
+                <img src={image} alt='Avt' className=' w-[120px] h-[120px] rounded-full my-[15px] mx-[15px]' />
+
+                <div className='flex-col'>
+                    <div className='text-[36px] font-semibold'>
+                        {name_content}
+                    </div>
+                    <div className='flex'>
+                        <div className='text-[20px] text-[#C5C7CD]'>Author:</div>
+                        <div className='text-[20px] font-bold mx-[15px]'>{authorname}</div>
+                    </div>
+                </div>
+
+                <div className='flex-col'>
+
+                    <div className='flex my-[10px] mx-[30px]'>
+                        <button className='flex w-[152px] h-[90px] mx-[28px]  border-[#c4c7ea]'>
+                            <div className='bg-[#ffffff] rounded-[8px] px-[14px] py-[2px]  border-[2px]'>
+                                <button className=' w-[152px] h-[90px]' >
+                                    <div className='flex-col'>
+                                        <div className='text-[#9FA2B4] text-[19px] font-semibold mt-[10px]'> Paid </div>
+                                        <div className='text-[#252733] text-[24px] font-semibold'> {paid} </div>
+                                    </div>
+                                </button>
+                            </div>
+                        </button>
+
+                        <button className='flex w-[152px] h-[90px] mx-[28px]  border-[#c4c7ea]'>
+                            <div className='bg-[#ffffff] rounded-[8px] px-[14px] py-[2px]  border-[2px]'>
+                                <button className=' w-[152px] h-[90px]' >
+                                    <div className='flex-col'>
+                                        <div className='text-[#9FA2B4] text-[19px] font-semibold mt-[10px]'> Unpaid </div>
+                                        <div className='text-[#252733] text-[24px] font-semibold'> {unpaid} </div>
+                                    </div>
+                                </button>
+                            </div>
+                        </button>
+
+                        <button className='flex w-[152px] h-[90px] mx-[28px]  border-[#c4c7ea]'>
+                            <div className='bg-[#ffffff] rounded-[8px] px-[14px] py-[2px]  border-[2px]'>
+                                <button className=' w-[152px] h-[90px]' >
+                                    <div className='flex-col'>
+                                        <div className='text-[#9FA2B4] text-[19px] font-semibold mt-[10px]'> Chapters </div>
+                                        <div className='text-[#252733] text-[24px] font-semibold'> {approve} </div>
+                                    </div>
+                                </button>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div className='flex items-end'>
+
+                        <div className='flex place-content-center w-full h-fit mt-[10px] mx-[10px]'>
+                            <div className='bg-[#7879F1] rounded-[100px] px-[14px] py-[2px]'>
+                                <button className='mx-3 text-[#ffffff]' onClick={() => click_outline()}>
+                                    New Outline
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className='flex place-content-center w-full h-fit mt-[10px] mx-[10px]'>
+                            <div className='bg-[#7879F1] rounded-[100px] px-[14px] py-[2px]'>
+                                <button className='mx-3 text-[#ffffff]' onClick={() => click_chapter()}>
+                                    New Chapter
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div className='flex-col'>
+                <div className='items-center px-5 my-[20px] bg-white font-bold border-t'>
+                    Story
+                </div>
+                <OverviewDraft_Outline id ={Draft_stt.id} content={Draft_stt.content} name={'Draft'} paid_stt={Draft_stt.paid_stt} stt={Draft_stt.stt} />
+                {/* <OverviewDraft_Outline name={'Outline'} paid_stt='Paid' stt='Checked' /> */}
+                {outlinetab}
+                <div className='items-center px-5 h-[60px] bg-white border-t py-[10px] font-semibold'>
+                    Chapters : { }
+                </div>
+
+                {/* <OverviewChapterList chapterData={chapterdatalist} /> */}
+                {chapterlist_tap}
+            </div>
+        </div>
+    )
+}
+
+export default DetailStory_au

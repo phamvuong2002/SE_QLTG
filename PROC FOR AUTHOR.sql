@@ -1,4 +1,4 @@
-﻿select *from STORY
+﻿select *from OUTLINE 
 ----------------COUNT STORY---------------------
 create 
 --alter 
@@ -212,7 +212,7 @@ begin
 	end
 	declare @name varchar(30), @unpaid float, @editorid char(10), @paid_stt varchar(10) = 'Paid', @stt varchar(10) = 'unchecked'
 	select CHAPTERNAME name, Convert(varchar, Case When UNPAIR > 0 Then 'UnPaid' Else 'Paid' End) As paid_stt, 
-			Convert(varchar, Case When UNPAIR = -1 Then 'UnChecked' Else 'Checked' End) As stt,
+			Convert(varchar, Case When EDITORID is null Then 'UnChecked' Else 'Checked' End) As stt,
 			CONTENT content, CHAPTERID id
 			from CHAPTER where STORYID = @storyid
 	
@@ -226,14 +226,9 @@ proc getDraft
 	@storyid char(10)
 as
 begin
-	--if not exists(select STORYID from STORY where STORYID = @storyid)
-	--	begin
-	--		select 'STORY is not exists' ERROR
-	--		return 0
-	--	end
-	if not exists(select DRAFTID from DRAFT where STORYID = @storyid)
+	if not exists(select STORYID from STORY where STORYID = @storyid)
 		begin
-			select 'STORY has no draft' ERROR
+			select 'STORY is not exists' ERROR
 			return 0
 		end
 	select top 1 Convert(varchar, Case When UNPAIR > 0 Then 'UnPaid' Else 'Paid' End) As paid_stt, 
@@ -243,8 +238,8 @@ begin
 end
 select *from DRAFT where DRAFTID = 'DR10970447'
 exec getDraft 'ST10970447'
-exec getDraft 'ST015092  '
-select *from STORY where STORYID = 'ST015092  '
+exec getDraft 'ST27449577'
+select *from STORY 
 -----------------------get outline--------------------------------
 create
 --alter
@@ -268,7 +263,7 @@ begin
 			CONTENT content, OUTLINEID id
 			from OUTLINE where STORYID = @storyid
 end
-exec getOutline 'ST787374  '
+exec getOutline 'ST10970447'
 select *from OUTLINE where STORYID = 'ST35511901'
 select *from STORY
 -------------------create story------------------
@@ -431,15 +426,18 @@ begin tran
 commit tran
 return 1
 
-exec createOutline 'AU7922632', 'ST10970447', '346311' , 'abcxyz'
+exec createOutline 'AU7947660', 'ST001775', '001775' , 'abcxyz'
+select *from OUTLINE
+select *from AUTHOR 
 select *from STORY
-select *from OUTLINE where STORYID = 'ST10970447'
+select *from STORY where STORYID = 'ST118376'
 delete OUTLINE
-where OUTLINEID = '346311  '
+where OUTLINEID = '118376  '
 
-select *from OUTLINE where STORYID = 'ST5653906 '
+select *from OUTLINE where STORYID = 'ST001775'
 select *from DRAFT where STORYID = 'ST5653906 '
 select *from CHAPTER where STORYID = 'ST5653906 '
+select *from STORY where STORYNAME = 'Rezapicistor'
 
 -------------------------------UPDATE DRAFT-------------------
 create
@@ -539,3 +537,38 @@ commit tran
 return 1
 exec updateChapter 'CT72513578',N'Đêm Thứ 1', null
 select *from CHAPTER
+
+
+--------------------------update add draft------------------
+select *from DRAFT where STORYID
+select *from DRAFT
+declare @i int = 0
+while @i < 16
+begin 
+	declare @storyid char(10) = 
+	(select top 1 STORYID from STORY where STORYID not in (select STORYID from DRAFT ))
+	declare @authorid char(10) = 
+	(select AUTHORID from STORY where STORYID = @storyid )
+	declare @editorid char(10) = 
+	(select EDITORID from AUTHOR where AUTHORID = @authorid)
+	declare @draftid char(10) = REPLACE(@storyid, 'ST', 'DR')
+	insert DRAFT values(@draftid,@authorid,@storyid,@editorid,
+	REPLACE(CONVERT(varchar(255), NEWID()),'-', ' '),RAND()*2000,0)
+	set @i = @i + 1
+end
+SELECT REPLACE(CONVERT(varchar(255), NEWID()),'-', ' ')
+print(RAND()*2000)
+
+--------------------------Get comment-------------------
+create 
+--alter 
+proc getCmtChapter
+	 @chapterid char(10)
+as
+begin
+	select TOP 1 EDITORID, CONTENT from COMMENT where CHAPTERID = @chapterid
+end
+exec getCmtChapter 'CT23692353'
+select *from COMMENT
+select *from EDITOR WHERE EDITORID = 'ED478628  '
+insert COMMENT values ( 'CM000256','CT23692353','ED478628','Good')

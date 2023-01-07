@@ -103,7 +103,16 @@ const updateChapter = async (req, res, next) => {
         res.status(400).send(error.message);
     }
 }
+const getCmtChapter = async (req, res, next) => {
+    try {
+        const chapterid = req.params.id;
+        const cmt = await AuthorsData.getCmtChapter(chapterid);
+        res.send(cmt);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
 module.exports = {
     countStory, storyDatalist, calPairUnpairStory, getAllChaptersofStory, createStory, createChapter,
-    createOutline, getDraft, getOutline, updateStory, updateChapter
+    createOutline, getDraft, getOutline, updateStory, updateChapter, getCmtChapter
 }

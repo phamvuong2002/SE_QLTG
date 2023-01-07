@@ -16,6 +16,7 @@ router.post('/createchapter', AuthorsControll.createChapter);
 router.post('/createoutline', AuthorsControll.createOutline);
 router.put('/updatestory', AuthorsControll.updateStory);
 router.put('/updatechapter', AuthorsControll.updateChapter);
+router.get('/getcmt/:id', AuthorsControll.getCmtChapter);
 
 // router.put('/updateauthor/:id', AuthorsControll.update_Author);
 // router.delete('/deleteauthor/:id', AuthorsControll.delete_Author);
