@@ -200,15 +200,15 @@ BEGIN Tran
 		ROLLBACK TRAN
 		RETURN 0
 	END
-	IF EXISTS (SELECT AUTHORID FROM AUTHOR WHERE TRIM(AUTHORID) = TRIM(@authorid))
-	BEGIN
-		SELECT 'ID IS EXISTED' AS 'ERROR'
-		ROLLBACK TRAN
-		RETURN 0
-	END
 	if exists (select *from AUTHOR where USERNAME = @username)
 	BEGIN
 		SELECT 'Username already exists' AS 'ERROR'
+		ROLLBACK TRAN
+		RETURN 0
+	END
+	IF EXISTS (SELECT AUTHORID FROM AUTHOR WHERE TRIM(AUTHORID) = TRIM(@authorid))
+	BEGIN
+		SELECT 'AUTHORID IS EXISTED' AS 'ERROR'
 		ROLLBACK TRAN
 		RETURN 0
 	END
@@ -217,14 +217,14 @@ BEGIN Tran
 	
 	INSERT AUTHOR VALUES (@authorid, @adminid, @editorid, @password, @authorname, @email,
 	'address', @phonenumber, @username, 0, @image)
-	SELECT 'ADDING AUTHOR SUCCESSFULLY' AS '1'
+	SELECT 'ADDING AUTHOR SUCCESSFULLY' AS 'RESULT'
 COMMIT TRAN
 GO
 exec USP_createAuthor 'AU20022002','AD808006','vuong1001','123456789',N'Phạm Vương',
 'pvuong@gmail.com','0948908485'
 select *from AUTHOR where AUTHORID = 'AU20022002'
 delete AUTHOR where AUTHORID = 'AU20022002'
-select *from AUTHOR
+select *from ADMIN
 ----------------------------8----------------------------
 DROP PROC IF EXISTS USP_createEditor
 GO
@@ -235,21 +235,41 @@ PROC USP_createEditor
 	@editorid CHAR(10),
 	@adminid CHAR(10),
 	@username CHAR(20),
-	@password CHAR(15)
+	@password CHAR(15),
+	@editorname nchar(50),
+	@email char(30),
+	@phonenumber char(15)
 AS
-BEGIN 
-	IF EXISTS (SELECT EDITORID FROM EDITOR WHERE TRIM(EDITORID) = TRIM(@editorid))
+BEGIN TRAN
+	if not exists( select ADMINID from ADMIN where ADMINID = @adminid )
 		BEGIN
-			SELECT 'ID IS EXISTED' AS 'ERROR'
+			SELECT 'ADMIN IS NOT EXISTED' AS 'ERROR'
 			ROLLBACK TRAN
 			RETURN 0
 		END
+	if exists (select *from EDITOR where USERNAME = @username)
+	BEGIN
+		SELECT 'Username already exists' AS 'ERROR'
+		ROLLBACK TRAN
+		RETURN 0
+	END
+	IF EXISTS (SELECT EDITORID FROM EDITOR WHERE TRIM(EDITORID) = TRIM(@editorid))
+		BEGIN
+			SELECT 'EDITORID IS EXISTED' AS 'ERROR'
+			ROLLBACK TRAN
+			RETURN 0
+		END
+	declare @image varchar(50) = ('avatar_vio_' + Cast(FLOOR(RAND()*(20 - 1) + 1) as varchar) + '.jpg')
 
-	INSERT EDITOR (EDITORID, ADMINID, PASSWORD, USERNAME, AVATAR) 
-	VALUES (@editorid, @adminid, @password, @username, 'empty.png')
-	SELECT 'ADDING EDITOR SUCCESSFULLY' AS '1'
-END
-GO
+	INSERT EDITOR VALUES (@editorid, @adminid, @editorname, @email,
+	 @phonenumber, @username, 0, @password, @image)
+	SELECT 'ADDING EDITOR SUCCESSFULLY' AS 'RESULT'
+COMMIT TRAN
+select *from EDITOR
+exec USP_createEditor 'ED2000001','AD936223','luong123', '123456789', N'Lương Hán', 
+					'lh@gmail.com','093748463'
+delete EDITOR
+where EDITORID = 'ED2000001'
 
 ----------------------------9----------------------------
 DROP PROC IF EXISTS USP_getAuthorFromEditor 
